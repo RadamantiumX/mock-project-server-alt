@@ -1,9 +1,11 @@
 import express, {json} from 'express'
-import router from './src/router/auth.router'
+import authRouter from './src/router/auth.router'
+import socialRouter from './src/router/social.router'
 import 'dotenv/config'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser'
 
 dotenv.config()
 export const createApp = () => {
@@ -12,10 +14,13 @@ export const createApp = () => {
     app.use(cors())
     app.use(bodyParser.urlencoded({ extended: true  }))
     app.use(bodyParser.json())
+    app.use(cookieParser())
     
     // app.disable('x-powered-by')
 
-    app.use('/auth', router)
+    app.use('/auth', authRouter)
+    app.use('/social', socialRouter)
+
 
     const PORT = process.env.PORT || 3000
 

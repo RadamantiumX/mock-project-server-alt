@@ -5,6 +5,7 @@ import { prisma } from "../prisma-db/prisma";
 import jwt from "../utils/jwt";
 import { validateUserSchema } from "../schemas/validations";
 
+
 export class AuthController {
     
        async signin (req: Request, res: Response, next:NextFunction) {
@@ -33,11 +34,16 @@ export class AuthController {
                     message: 'Invalid password or email provided',
                   });
              }
-
-             
-          
+     
               const token = jwt.sign({ id: user.id, email: user.email });
-            
+             
+              // Cookie options
+              const cookieOptions = {
+                    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+                    httpOnly: true
+              }
+              res.cookie('jwt', token, cookieOptions) // Cookie Session -> Server side 
+              
               res.status(StatusCodes.OK).json({ response:{ id: user.id, nickname: user.nickname, email: user.email, token: token } });
     }
 
@@ -71,6 +77,36 @@ export class AuthController {
 
            res.status(StatusCodes.OK).json({ message: "User register successfully" })
 
+    }
+    async isAuthenticated(req: Request, res: Response, next:NextFunction){
+      const { token } = req.body
+        
+          if (token){
+             const decode:any = jwt.verify(token)
+             const email = decode.email
+             const verifyUser = await prisma.user.findUnique({ where:{email} })
+             if (!verifyUser){
+               res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Not auth' })
+             }
+
+         res.status(StatusCodes.OK).json({ message: "User authententicated" })
+             
+   } else {
+      res.status(StatusCodes.UNAUTHORIZED).json({ message: "Not Authenticated" })
+   }
+   
+    }
+
+    async recovery(req: Request, res: Response, next:NextFunction){
+
+    }
+    async reset(req: Request, res: Response, next:NextFunction){
+      
+    }
+
+    async logout(req: Request, res: Response, next:NextFunction){
+        res.clearCookie('jwt') // Delete Cookie Session
+        return res.json({ message: 'logout' })
     }
 }
 

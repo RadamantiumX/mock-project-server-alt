@@ -3,13 +3,15 @@ import { Router } from "express"
 import { AuthController } from "../controllers/auth.controller"
 
 
-    const router = Router()
+    const authRouter = Router()
     const authController = new AuthController()
 
-    router.post('/signin', authController.signin)
-    router.post('/signup', authController.signup)
+    authRouter.post('/signin', authController.signin)
+    authRouter.post('/signup', authController.signup)
+    authRouter.post('/logout', authController.logout)
+    authRouter.post('/token', authController.isAuthenticated)
 
     
 
 
-export default router
+export default authRouter
