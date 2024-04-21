@@ -22,7 +22,7 @@ export class SocialController{
                 authorId: id,
             }
         })
-        res.status(StatusCodes.OK).json({ message: 'Adding to Favorites' })
+        res.status(StatusCodes.OK).json({ message: 'Adding to Favorites'})
             
   } else {
      res.status(StatusCodes.UNAUTHORIZED).json({ message: "Not Authenticated" })
@@ -31,7 +31,18 @@ export class SocialController{
 
     async deleteFav(req:Request, res:Response, next: NextFunction){
         const { videoId, token } = req.body
-        const deleteCurrentFav = await prisma.favorites.delete({ where:{ videoId } })
+        const decode:any = jwt.verify(token)
+        const email = decode.email
+        const authorId = decode.id
+        const verifyUser = await prisma.user.findUnique({ where: {email} })
+        if(!verifyUser){
+          return next({
+            status: StatusCodes.UNAUTHORIZED,
+            message: 'Not user authenticated'
+          })
+        }
+        const deleteCurrent = await prisma.$queryRaw`DELETE FROM favorites WHERE (videoId = ${videoId}) AND (authorId = ${authorId});`
+        
         res.status(StatusCodes.OK).json({ message: "Delete from Favorites" })
     }
 
@@ -40,26 +51,39 @@ export class SocialController{
         if (token){
             const decode:any = jwt.verify(token)
             const email = decode.email
-            const id = decode.id
+            const authorId = decode.id
             const verifyUser = await prisma.user.findUnique({ where:{email} })
             if (!verifyUser){
-              res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Not auth' })
+              return next({
+                status: StatusCodes.UNAUTHORIZED,
+                message: 'Not authorized'
+              })
             }
 
-        const addFav = await prisma.favorites.findFirst({ where:{videoId} })
+        const addFav = await prisma.$queryRaw`SELECT * FROM favorites WHERE (videoId = ${videoId}) AND (authorId = ${authorId});`
         if(!addFav){
-          return next({
-            status: StatusCodes.BAD_REQUEST,
-            message: "Movie not Found"
-          })
+          res.status(StatusCodes.OK).json({ message: 'none' })
         }
 
         res.status(StatusCodes.OK).json({ message: "red" })
         
             
   } else {
-     res.status(StatusCodes.UNAUTHORIZED).json({ message: "Not token provided" })
+     return next({
+        status: StatusCodes.UNAUTHORIZED,
+        message: 'Not found'
+     })
   }
 
+    }
+
+    async isTest(req:Request, res:Response, next: NextFunction){
+       const {authorId, videoId } = req.body
+       const addFav = await prisma.$queryRaw`SELECT * FROM favorites WHERE (videoId = ${videoId}) AND (authorId = ${authorId});`
+        if(!addFav){
+          res.status(StatusCodes.OK).json({ message: 'none' })
+        }
+
+        res.status(StatusCodes.OK).json({ message: "red" })
     }
 }

@@ -9,7 +9,7 @@ import { SocialController } from "../controllers/social.controller"
     socialRouter.post('/fav', socialController.fav)
     socialRouter.post('/delfav', socialController.deleteFav)
     socialRouter.post('/isfav', socialController.isFav)
-    
+    socialRouter.post('/test', socialController.isTest)
 
     
 
