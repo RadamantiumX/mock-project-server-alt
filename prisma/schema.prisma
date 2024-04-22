@@ -21,7 +21,7 @@ model User {
   createdAt DateTime @default(now())
   post Post[]
   responses ResponsePost[]
-  favs Favorites[]
+  favs Favorite[]
   likePost LikePost[]
 }
 
@@ -48,7 +48,7 @@ model ResponsePost {
   responses ResponsePost[] @relation("ResponseToResponse")
 }
 
-model Favorites {
+model Favorite {
   id Int @id @default(autoincrement())
   videoId String 
   author User @relation(fields: [authorId], references: [id])
