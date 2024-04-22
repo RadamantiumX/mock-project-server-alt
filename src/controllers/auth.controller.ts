@@ -81,19 +81,19 @@ export class AuthController {
     async isAuthenticated(req: Request, res: Response, next:NextFunction){
       const { token } = req.body
         
-          if (token){
+         try{
              const decode:any = jwt.verify(token)
              const email = decode.email
              const verifyUser = await prisma.user.findUnique({ where:{email} })
              if (!verifyUser){
-               res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Not auth' })
+               res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Not valid user' })
              }
 
          res.status(StatusCodes.OK).json({ message: "User authententicated" })
-             
-   } else {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: "Not Authenticated" })
-   }
+      }catch(err){
+         res.status(StatusCodes.FORBIDDEN).json({ message: "Your Session are expired..." })
+      }       
+  
    
     }
 
