@@ -48,7 +48,7 @@ export class SocialController{
               message: 'Not user authenticated'
             })
           }
-          const deleteCurrent = await prisma.$queryRaw`DELETE FROM favorites WHERE (videoId = ${videoId}) AND (authorId = ${authorId});`
+          const deleteCurrent = await prisma.$executeRaw`DELETE FROM favorite WHERE (videoId = ${videoId}) AND (authorId = ${parseInt(authorId)});`
           
           res.status(StatusCodes.OK).json({ message: "Delete from Favorites" })
         }catch(err){
@@ -74,7 +74,7 @@ export class SocialController{
               })
             }
 
-        const addFav = await prisma.$queryRaw`SELECT * FROM "public"."Favorites" WHERE (videoId = ${videoId}) AND (authorId = ${authorId});`
+        const addFav = await prisma.$queryRaw`SELECT * FROM favorite WHERE (videoId = ${videoId}) AND (authorId = ${authorId});`
         if(!addFav){
           res.status(StatusCodes.OK).json({ message: 'none' })
         }
@@ -92,13 +92,12 @@ export class SocialController{
 
     async isTest(req:Request, res:Response, next: NextFunction){
        const {authorId, videoId } = req.body
-       // const addFav = await prisma.$queryRaw`SELECT * FROM favorites WHERE (videoId = ${videoId}) AND (authorId = ${authorId});`
-      const addFav = await prisma.favorite.findFirst({ where: { authorId: authorId, videoId: videoId } })
-       
-       if(!addFav){
-          return "red"
+       const addFav:any = await prisma.$queryRaw`SELECT * FROM favorite WHERE videoId = ${videoId} AND authorId = ${authorId};`
+      
+       if(addFav){
+          return "none"
         }
 
-        res.status(StatusCodes.OK).json({ message: "red" })
+        res.status(StatusCodes.OK).json({ addFav })
     }
 }
