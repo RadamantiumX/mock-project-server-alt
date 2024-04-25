@@ -1,6 +1,7 @@
 import express, {json} from 'express'
 import authRouter from './src/router/auth.router'
 import socialRouter from './src/router/social.router'
+import postRouter from './src/router/post.router'
 import 'dotenv/config'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -20,6 +21,7 @@ export const createApp = () => {
 
     app.use('/auth', authRouter)
     app.use('/social', socialRouter)
+    app.use('/post', postRouter)
 
 
     const PORT = process.env.PORT || 3000

@@ -74,9 +74,9 @@ export class SocialController{
               })
             }
 
-        const addFav = await prisma.$queryRaw`SELECT * FROM favorite WHERE (videoId = ${videoId}) AND (authorId = ${authorId});`
+        const addFav = await prisma.favorite.findFirst({ where: { videoId: videoId, authorId: authorId } })
         if(!addFav){
-          res.status(StatusCodes.OK).json({ message: 'none' })
+          res.status(StatusCodes.NO_CONTENT).json({ message: 'none' })
         }
 
         res.status(StatusCodes.OK).json({ message: "red" })
@@ -92,12 +92,23 @@ export class SocialController{
 
     async isTest(req:Request, res:Response, next: NextFunction){
        const {authorId, videoId } = req.body
-       const addFav:any = await prisma.$queryRaw`SELECT * FROM favorite WHERE videoId = ${videoId} AND authorId = ${authorId};`
+      try{
+         const fav = await prisma.favorite.findFirst({ where: { videoId: videoId, authorId:authorId } })
+         if(!fav) res.status(StatusCodes.NO_CONTENT).json({ message: 'No content' })// return next({ status: StatusCodes.BAD_REQUEST, message: 'Not results' })
+         res.status(StatusCodes.OK).json({ message: "red" })
+      } catch(err){
+        
+       return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: 'Not results found'
+       })
       
-       if(addFav){
-          return "none"
-        }
-
-        res.status(StatusCodes.OK).json({ addFav })
+        
+      } 
+     //const fav:any = await prisma.$queryRaw`SELECT * FROM favorite WHERE videoId = ${videoId} AND authorId = ${authorId};`
+     
+      
+          
+        
     }
 }
