@@ -95,7 +95,7 @@ export class SocialController{
       try{
          const fav = await prisma.favorite.findFirst({ where: { videoId: videoId, authorId:authorId } })
          if(!fav) res.status(StatusCodes.NO_CONTENT).json({ message: 'No content' })// return next({ status: StatusCodes.BAD_REQUEST, message: 'Not results' })
-         res.status(StatusCodes.OK).json({ message: "red" })
+         res.status(StatusCodes.OK).json({ fav })
       } catch(err){
         
        return next({

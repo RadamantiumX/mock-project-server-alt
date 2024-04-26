@@ -19,7 +19,7 @@ export class PostController {
               })
             }
 
-            const addPost = prisma.post.create({
+            const addPost = await prisma.post.create({
                 data:{
                     content: content,
                     authorId: authorId,
@@ -40,13 +40,13 @@ export class PostController {
        const { videoId } = req.body
 
        try{
-         const posts = prisma.post.findMany({ where: { videoId } })
+         const posts = await prisma.post.findMany({ where: { videoId: videoId } })
 
          if(!posts){
-            res.status(StatusCodes.OK).json({ message: 'No message for this video' })
+            res.status(StatusCodes.OK).json({ message: 'No messages for this video' })
          }
 
-         res.status(StatusCodes.OK).json( posts )
+         res.status(StatusCodes.OK).json({ posts })
        }catch(error){
            return next({
                status: StatusCodes.BAD_REQUEST,

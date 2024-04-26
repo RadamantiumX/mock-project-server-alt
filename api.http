@@ -28,3 +28,12 @@ Content-Type: application/json
   "authorId": 1,
   "videoId": "r85tLpyvXLw"
 }
+
+
+### Get Posts
+POST http://localhost:4000/post/allpost
+Content-Type: application/json
+
+{
+  "videoId": "yRqakpnxc6e"
+}
