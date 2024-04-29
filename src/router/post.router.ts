@@ -6,7 +6,7 @@ import { PostController } from "../controllers/post.controller"
     const postController = new PostController()
 
     postRouter.post('/newpost', postController.post)
-    postRouter.post('/allpost', postController.allPosts)
+    postRouter.get('/allpost/:id', postController.allPosts)
     
 
 export default postRouter
