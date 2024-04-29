@@ -28,6 +28,7 @@ model User {
 model Post {
   id Int @id @default(autoincrement())
   content String
+  nickname String
   author User @relation(fields: [authorId], references: [id])
   authorId Int 
   createdAt DateTime @default(now())
@@ -38,6 +39,7 @@ model Post {
 model ResponsePost {
   id Int @id @default(autoincrement()) 
   content String
+  nickname String
   author User @relation(fields: [authorId], references: [id])
   authorId Int
   createdAt DateTime @default(now())

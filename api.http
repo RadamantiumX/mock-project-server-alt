@@ -31,7 +31,7 @@ Content-Type: application/json
 
 
 ### Get Posts
-POST http://localhost:4000/post/allpost
+GET http://localhost:4000/post/allpost/X1OiCyAwKzb
 Content-Type: application/json
 
 {

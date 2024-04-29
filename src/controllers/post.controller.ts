@@ -23,11 +23,12 @@ export class PostController {
                 data:{
                     content: content,
                     authorId: authorId,
-                    videoId: videoId
+                    videoId: videoId,
+                    nickname: verifyUser.nickname
                 }
             })
 
-            res.status(StatusCodes.OK).json({ message: 'Message sent successfully' })
+            res.status(StatusCodes.OK).json({ message: 'Post sent successfully' })
       }catch(error){
             return next({
                 status: StatusCodes.BAD_REQUEST,
@@ -37,16 +38,17 @@ export class PostController {
    }
 
    async allPosts(req:Request, res:Response, next: NextFunction){
-       const { videoId } = req.body
+       const videoId  = req.params.id
 
        try{
+         const count = await prisma.post.count({ where: { videoId: videoId } })
          const posts = await prisma.post.findMany({ where: { videoId: videoId } })
-
+         
          if(!posts){
             res.status(StatusCodes.OK).json({ message: 'No messages for this video' })
          }
-
-         res.status(StatusCodes.OK).json({ posts })
+         
+         res.status(StatusCodes.OK).json({ count, posts })
        }catch(error){
            return next({
                status: StatusCodes.BAD_REQUEST,
