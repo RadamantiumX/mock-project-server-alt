@@ -3,8 +3,8 @@ POST http://localhost:4000/auth/signup
 Content-Type: application/json
 
 {
-  "nickname": "radaman",
-  "email": "rada@gmail.com",
+  "nickname": "booster",
+  "email": "boster@gmail.com",
   "password": "Seba2010!",
   "confirmPassword": "Seba2010!"
 }
@@ -31,9 +31,4 @@ Content-Type: application/json
 
 
 ### Get Posts
-GET http://localhost:4000/post/allpost/X1OiCyAwKzb
-Content-Type: application/json
-
-{
-  "videoId": "yRqakpnxc6e"
-}
+GET http://localhost:4000/post/allresponse

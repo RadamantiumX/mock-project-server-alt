@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "../utils/jwt";
 import { prisma } from "../prisma-db/prisma";
 
-export class SocialController{
+export class FavController{
     async fav(req:Request, res:Response, next: NextFunction){
         const { token, videoId } = req.body
             

@@ -5,7 +5,7 @@ import { prisma } from "../prisma-db/prisma";
 
 export class PostController {
    async post(req:Request, res:Response, next: NextFunction){
-      const { token, content, videoId } = req.body
+      const { token, content, videoId, postId, response } = req.body
       try{
             const decode:any = jwt.verify(token)
             const email = decode.email
@@ -18,7 +18,19 @@ export class PostController {
                 message: 'Not authorized user'
               })
             }
+            if (response){
+              const addResponse = await prisma.responsePost.create({
+                data: {
+                    content: content,
+                    authorId: authorId,
+                    postId: postId,
+                    nickname: verifyUser.nickname
+                }
+              })
 
+              res.status(StatusCodes.OK).json({ message: 'Response sent successfully' })
+            }
+         
             const addPost = await prisma.post.create({
                 data:{
                     content: content,
@@ -27,7 +39,8 @@ export class PostController {
                     nickname: verifyUser.nickname
                 }
             })
-
+          
+          
             res.status(StatusCodes.OK).json({ message: 'Post sent successfully' })
       }catch(error){
             return next({
@@ -37,23 +50,61 @@ export class PostController {
       }
    }
 
+   
+
    async allPosts(req:Request, res:Response, next: NextFunction){
-       const videoId  = req.params.id
+       const id  = req.params.id
+       const type = req.params.type
 
        try{
-         const count = await prisma.post.count({ where: { videoId: videoId } })
-         const posts = await prisma.post.findMany({ where: { videoId: videoId } })
+        if (type === 'post'){
+         const count = await prisma.post.count({ where: { videoId: id} })
+         const posts = await prisma.post.findMany({ where: { videoId: id }, orderBy:{ createdAt: 'desc' }  })
          
          if(!posts){
             res.status(StatusCodes.OK).json({ message: 'No messages for this video' })
          }
          
          res.status(StatusCodes.OK).json({ count, posts })
-       }catch(error){
+         } 
+         
+         if(type === 'reply'){
+            const count = await prisma.responsePost.count({ where: { postId: parseInt(id) } })
+            const reply = await prisma.responsePost.findMany({ where: { postId: parseInt(id) }, orderBy: { createdAt: 'desc' } })
+
+            if(!reply){
+              res.status(StatusCodes.OK).json({ message: 'Not found responses' })
+            }
+
+            res.status(StatusCodes.OK).json({ count, reply })
+         }
+       }catch(error:any){
            return next({
                status: StatusCodes.BAD_REQUEST,
-               message: "Something's wrong"
+               message: error.message
            })
        }
    }
+async allResponses(req:Request, res:Response, next: NextFunction){
+    try{
+          const responses = await prisma.responsePost.findMany({ orderBy: {createdAt: 'desc'} })
+          if(!responses){
+            res.status(StatusCodes.OK).json({ message: "No responses" })
+          }
+
+          res.status(StatusCodes.OK).json({ responses })
+    }catch(error:any){
+         return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: error.message
+         })
+    }
 }
+
+async reply(req:Request, res:Response, next: NextFunction){
+  const { token, content, videoId, postId, response } = req.body
+     
+ }
+
+}
+

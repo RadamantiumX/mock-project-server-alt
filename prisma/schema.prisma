@@ -43,8 +43,8 @@ model ResponsePost {
   author User @relation(fields: [authorId], references: [id])
   authorId Int
   createdAt DateTime @default(now())
-  postedBy Post @relation(fields: [postId], references: [id])
-  postId Int
+  postedBy Post? @relation(fields: [postId], references: [id])
+  postId Int?
   response ResponsePost? @relation("ResponseToResponse",fields: [responseId], references: [id])
   responseId Int?
   responses ResponsePost[] @relation("ResponseToResponse")

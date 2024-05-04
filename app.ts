@@ -1,6 +1,6 @@
 import express, {json} from 'express'
 import authRouter from './src/router/auth.router'
-import socialRouter from './src/router/social.router'
+import favRouter from './src/router/fav.router'
 import postRouter from './src/router/post.router'
 import 'dotenv/config'
 import cors from 'cors'
@@ -20,7 +20,7 @@ export const createApp = () => {
     // app.disable('x-powered-by')
 
     app.use('/auth', authRouter)
-    app.use('/social', socialRouter)
+    app.use('/social', favRouter)
     app.use('/post', postRouter)
 
 
