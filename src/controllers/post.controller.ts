@@ -102,7 +102,7 @@ async allResponses(req:Request, res:Response, next: NextFunction){
 }
 
 async reply(req:Request, res:Response, next: NextFunction){
-  const { token, content, videoId, postId, response } = req.body
+   //
      
  }
 

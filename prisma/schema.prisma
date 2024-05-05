@@ -22,7 +22,7 @@ model User {
   post Post[]
   responses ResponsePost[]
   favs Favorite[]
-  likePost LikePost[]
+  likePost LikeVideo[]
 }
 
 model Post {
@@ -58,9 +58,10 @@ model Favorite {
   createdAt DateTime @default(now())
 }
 
-model LikePost {
+model LikeVideo {
   id Int @id @default(autoincrement())
-  postId String
+  videoId String
+  like Boolean
   author User @relation(fields: [authorId], references: [id])
   authorId Int
   createdAt DateTime @default(now())

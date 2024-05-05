@@ -2,6 +2,7 @@ import express, {json} from 'express'
 import authRouter from './src/router/auth.router'
 import favRouter from './src/router/fav.router'
 import postRouter from './src/router/post.router'
+import likeRouter from './src/router/like.router'
 import 'dotenv/config'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -22,7 +23,8 @@ export const createApp = () => {
     app.use('/auth', authRouter)
     app.use('/social', favRouter)
     app.use('/post', postRouter)
-
+    app.use('/like', likeRouter)
+    
 
     const PORT = process.env.PORT || 3000
 
