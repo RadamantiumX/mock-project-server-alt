@@ -32,3 +32,13 @@ Content-Type: application/json
 
 ### Get Posts
 GET http://localhost:4000/post/allresponse
+
+
+### Is Like
+POST http://localhost:4000/like/test
+Content-Type: application/json
+
+{
+  "authorId": 1,
+  "videoId": "HSMTApHncjY"
+}

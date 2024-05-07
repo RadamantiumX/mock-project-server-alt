@@ -8,6 +8,7 @@ import { LikeController } from "../controllers/like.controller"
     likeRouter.post('/add', likeController.likeVideo)
     likeRouter.post('/del', likeController.deleteLike)
     likeRouter.post('/current', likeController.currentLike)
+    likeRouter.post('/test', likeController.test)
     
 
 export default likeRouter

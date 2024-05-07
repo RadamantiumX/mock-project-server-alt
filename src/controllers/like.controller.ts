@@ -19,7 +19,14 @@ export class LikeController {
                 message: 'Not authorized user'
               })
             }
-
+            // Verify the record with this fields
+            const verifyLike = await prisma.likeVideo.findFirst({ where: {videoId:videoId, authorId:authorId} })
+            
+            // If exists with this same fields, this record must be deleted
+            if(verifyLike){
+                const deleteCurrent = await prisma.likeVideo.delete({ where: {id: verifyLike.id}  })
+            }
+            // Then, the new record is created with a different "like" value
             const addlike = await prisma.likeVideo.create({
                 data:{
                     videoId: videoId,
@@ -27,7 +34,7 @@ export class LikeController {
                     authorId: authorId
                 }
             })
-            if (like === 1){
+            if (like){
                res.status(StatusCodes.OK).json({ message: 'You liked this video' }) 
             }
 
@@ -58,7 +65,7 @@ export class LikeController {
 
             const deleteCurrent = await prisma.$executeRaw`DELETE FROM likevideo WHERE (videoId = ${videoId}) AND (authorId = ${parseInt(authorId)});`
 
-            res.status(StatusCodes.OK).json({ message: 'Not found' })
+            res.status(StatusCodes.OK).json({ message: 'Deleted' })
 
         }catch(err){
             return next({
@@ -85,10 +92,15 @@ export class LikeController {
             const likedVideo = await prisma.likeVideo.findFirst({ where: { videoId: videoId, authorId: authorId } })
 
             if(!likedVideo){
-                res.status(StatusCodes.OK).json({ message: 'Not filled'})
+                res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
             }
-
-            res.status(StatusCodes.OK).json({ message: 'Fill'})
+            
+            if(likedVideo?.like){
+                res.status(StatusCodes.OK).json({ like: 'green' })  
+            }
+            
+            res.status(StatusCodes.OK).json({ like: 'red' })  
+            
 
         }catch(err){
             return next({
@@ -96,5 +108,16 @@ export class LikeController {
                 message: "Something's wrong"
             })
         }
+    }
+
+    async test(req:Request, res:Response, next: NextFunction){
+        const { videoId, authorId } = req.body
+
+        const likedVideo = await prisma.likeVideo.findFirst({ where: { videoId: videoId, authorId: authorId } })
+
+        if(!likedVideo){
+            res.status(StatusCodes.OK).json({ message: 'Not filled'})
+        }
+        res.status(StatusCodes.OK).json({ like: likedVideo?.like })
     }
 }
