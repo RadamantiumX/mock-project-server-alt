@@ -95,11 +95,8 @@ export class LikeController {
                 res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
             }
             
-            if(likedVideo?.like){
-                res.status(StatusCodes.OK).json({ like: 'green' })  
-            }
             
-            res.status(StatusCodes.OK).json({ like: 'red' })  
+            res.status(StatusCodes.OK).json({ like: likedVideo?.like })  
             
 
         }catch(err){
@@ -118,6 +115,6 @@ export class LikeController {
         if(!likedVideo){
             res.status(StatusCodes.OK).json({ message: 'Not filled'})
         }
-        res.status(StatusCodes.OK).json({ like: likedVideo?.like })
+        res.status(StatusCodes.OK).json({ likedVideo})
     }
 }
