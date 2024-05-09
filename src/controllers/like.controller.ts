@@ -90,13 +90,13 @@ export class LikeController {
             }
 
             const likedVideo = await prisma.likeVideo.findFirst({ where: { videoId: videoId, authorId: authorId } })
-
+            
             if(!likedVideo){
                 res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
             }
-            
-            
-            res.status(StatusCodes.OK).json({ like: likedVideo?.like })  
+            const countLikes = await prisma.likeVideo.count({ where:{ videoId: videoId, like: true } })
+            const countTotal = await prisma.likeVideo.count({ where: { videoId: videoId } })
+            res.status(StatusCodes.OK).json({ like: likedVideo?.like, count_likes: countLikes, count_total: countTotal })  
             
 
         }catch(err){
@@ -115,6 +115,9 @@ export class LikeController {
         if(!likedVideo){
             res.status(StatusCodes.OK).json({ message: 'Not filled'})
         }
-        res.status(StatusCodes.OK).json({ likedVideo})
+
+        const countLikes = await prisma.likeVideo.count({ where:{ videoId: videoId, like: true } })
+        const countTotal = await prisma.likeVideo.count({ where: { videoId: videoId } })
+        res.status(StatusCodes.OK).json({ like: likedVideo?.like, count_likes: countLikes, count_total: countTotal })
     }
 }
