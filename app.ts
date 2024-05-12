@@ -3,6 +3,7 @@ import authRouter from './src/router/auth.router'
 import favRouter from './src/router/fav.router'
 import postRouter from './src/router/post.router'
 import likeRouter from './src/router/like.router'
+import messageRouter from './src/router/message.router'
 import 'dotenv/config'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -24,6 +25,7 @@ export const createApp = () => {
     app.use('/social', favRouter)
     app.use('/post', postRouter)
     app.use('/like', likeRouter)
+    app.use('/message', messageRouter)
     
 
     const PORT = process.env.PORT || 3000
