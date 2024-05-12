@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from "http-status-codes";
 import jwt from "../utils/jwt";
 import { prisma } from "../prisma-db/prisma";
+import { validatePostSchema } from '../schemas/validations';
 
 export class PostController {
    async post(req:Request, res:Response, next: NextFunction){
@@ -11,6 +12,7 @@ export class PostController {
             const email = decode.email
             const authorId = decode.id
             const verifyUser = await prisma.user.findUnique({ where:{email} })
+            const validatePost = validatePostSchema(content)
             if (!verifyUser){
               
               return next({
@@ -18,6 +20,12 @@ export class PostController {
                 message: 'Not authorized user'
               })
             }
+            if (!validatePost.success) {
+              return next({
+                status: StatusCodes.BAD_REQUEST,
+                message: JSON.parse(validatePost.error.message)
+              })
+           }
             if (response){
               const addResponse = await prisma.responsePost.create({
                 data: {
