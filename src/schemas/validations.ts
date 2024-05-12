@@ -1,5 +1,5 @@
 import z from 'zod'
-import { AuthInput, PostInput, ResponsePostInput } from 'types'
+import { AuthInput, PostInput, Message } from 'types'
 
 // Minimum 8 characters, at least one uppercase letter,
 // one lowercase letter, one number and one special character
@@ -30,31 +30,36 @@ const userSchema = z.object({
         path: ["confirmPassword"]
     }
 )
-const responsePostSchema = z.object({
-    content: z.string({
-        required_error: 'Empty content'
-    }).max(255),
-    authorId: z.number(),
-    videoId: z.string(),
-    postId: z.number(),
-})
+
 
 const postSchema = z.object({
     content: z.string({
         required_error: 'Empty content'
-    }).max(255),
-    authorId: z.number(),
-    videoId: z.string()
+    }).max(255)
+})
+
+const messageSchema = z.object({
+    name: z.string({
+        required_error: 'Empty field'
+    }).max(20),
+    email: z.string().email({
+        message: 'Please entry a valida email address'
+    }),
+    message: z.string({
+        required_error: 'Empty field'
+    }).max(255)
 })
 
 export function validatePostSchema(input: PostInput){
-    return responsePostSchema.safeParse(input)
-}
-
-export function validateResponsePostSchema(input: ResponsePostInput){
     return postSchema.safeParse(input)
 }
 
+
+
 export function validateUserSchema(input: AuthInput){
     return userSchema.safeParse(input)
+}
+
+export function validateMessageSchema(input: Message){
+    return messageSchema.safeParse(input)
 }
