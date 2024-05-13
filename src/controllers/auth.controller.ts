@@ -10,7 +10,10 @@ export class AuthController {
     
        async signin (req: Request, res: Response, next:NextFunction) {
              const { email, password } = req.body
-             if (!email || !password) {
+
+             try{
+
+                if (!email || !password) {
                 return next({
                     status: StatusCodes.BAD_REQUEST,
                     message: 'Some required files are missing'
@@ -45,17 +48,23 @@ export class AuthController {
               res.cookie('jwt', token, cookieOptions) // Cookie Session -> Server side 
               
               res.status(StatusCodes.OK).json({ response:{ id: user.id, nickname: user.nickname, email: user.email, token: token } });
+
+             }catch(err){
+                 return next({
+                  status: StatusCodes.BAD_REQUEST,
+                  message: 'Something was wrong!'
+                 })
+             }
+            
     }
 
     async signup (req: Request, res: Response, next:NextFunction) {
            const { nickname, email, password, confirmPassword } = req.body
+           try{
            const uniqueUser  = await prisma.user.findUnique({ where: { email } })
            const validate = validateUserSchema(req.body)
            if (uniqueUser) {
-              return next({
-                status: StatusCodes.BAD_REQUEST,
-                message: 'Current email provided already exists'
-              })
+              res.status(StatusCodes.BAD_REQUEST).json({ message: "User already exists" })
            }
 
            if (!validate.success) {
@@ -77,6 +86,14 @@ export class AuthController {
 
            res.status(StatusCodes.OK).json({ message: "User register successfully" })
 
+           }catch(err){
+              return next({
+                 status: StatusCodes.BAD_REQUEST,
+                 message: 'Something was wrong!'
+              })
+           }
+           
+
     }
     async isAuthenticated(req: Request, res: Response, next:NextFunction){
       const { token } = req.body
@@ -89,16 +106,16 @@ export class AuthController {
                res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Not valid user' })
              }
 
-         res.status(StatusCodes.OK).json({ message: "User authententicated" })
+         res.status(StatusCodes.OK).json({ message: `Welcome ${verifyUser?.nickname}!` })
       }catch(err){
-         res.status(StatusCodes.FORBIDDEN).json({ message: "Your Session are expired..." })
+         res.status(StatusCodes.UNAUTHORIZED).json({ message: "You must sign in first" })
       }       
   
    
     }
 
     async recovery(req: Request, res: Response, next:NextFunction){
-
+           
     }
     async reset(req: Request, res: Response, next:NextFunction){
       

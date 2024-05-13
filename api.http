@@ -56,3 +56,10 @@ Content-Type: application/json
 
 ### All messages
 GET http://localhost:4000/message/all
+
+### XVIDEOS
+GET https://www.xvideos.com/pornstars-index
+
+
+### SPANGBANG
+GET https://la.spankbang.com/pornstars
