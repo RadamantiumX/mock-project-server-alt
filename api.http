@@ -76,3 +76,7 @@ GET http://www.pornhub.com/view_video.php?viewkey=591533139
 GET https://api.omniinfer.io/v2/progress?task_id=f7b57066-11fb-457d-90c5-c5d657adbaaf
 Content-Type: application/json
 X-Omni-Key: f7b57066-11fb-457d-90c5-c5d657adbaaf
+
+
+### PHUB API test
+GET http://localhost:4000/phub/models/3
