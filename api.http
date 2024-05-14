@@ -63,3 +63,16 @@ GET https://www.xvideos.com/pornstars-index
 
 ### SPANGBANG
 GET https://la.spankbang.com/pornstars
+
+
+### PORNDB
+GET http://porn-bokep.com/tag/viendo-porno-lesbico/datastore_search?resource_id=2396aa60-e969-490f-98a0-d69195639a42&q=jones
+
+
+### PHUB
+GET http://www.pornhub.com/view_video.php?viewkey=591533139
+
+### Pornimage
+GET https://api.omniinfer.io/v2/progress?task_id=f7b57066-11fb-457d-90c5-c5d657adbaaf
+Content-Type: application/json
+X-Omni-Key: f7b57066-11fb-457d-90c5-c5d657adbaaf
