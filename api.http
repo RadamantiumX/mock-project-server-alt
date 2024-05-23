@@ -3,8 +3,8 @@ POST http://localhost:4000/auth/signup
 Content-Type: application/json
 
 {
-  "nickname": "booster",
-  "email": "boster@gmail.com",
+  "nickname": "radaman",
+  "email": "rada@gmail.com",
   "password": "Seba2010!",
   "confirmPassword": "Seba2010!"
 }
@@ -79,4 +79,4 @@ X-Omni-Key: f7b57066-11fb-457d-90c5-c5d657adbaaf
 
 
 ### PHUB API test
-GET http://localhost:4000/phub/models/3
+GET http://localhost:4000/phub/models

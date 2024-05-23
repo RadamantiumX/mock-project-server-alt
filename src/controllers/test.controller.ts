@@ -4,15 +4,15 @@ import { PornHub } from 'pornhub.js';
 
 export class TestController{
     async phubApi(req: Request, res: Response, next:NextFunction){
-        const page:number = parseInt(req.params)
+        // const page:number = req.params
         const pornhub = new PornHub()
         const models = await pornhub.pornstarList({
-            page: page,
+            page: 1,
             gender: 'female',
             order: 'Most Popular'
         })
         
-        res.status(StatusCodes.OK).json({ models })
+        res.status(StatusCodes.OK).json({ models: models })
     }
 }
 
