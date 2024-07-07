@@ -10,7 +10,7 @@ import { LikeController } from "../controllers/like.controller"
     likeRouter.post('/current-video', likeController.currentLikeVideo)
     likeRouter.post('/add-post',likeController.likePost)
     likeRouter.post('/del-post', likeController.deleteLikePost)
-    likeRouter.post('/current-post', likeController.currentLikeVideo)
+    likeRouter.post('/current-post', likeController.currentLikePost)
 
     likeRouter.post('/test', likeController.test)
     
