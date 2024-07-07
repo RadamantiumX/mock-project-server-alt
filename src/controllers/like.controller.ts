@@ -186,15 +186,19 @@ export class LikeController {
               }
 
               const likedVideo = await prisma.likePost.findFirst({ where: { postId: id, authorId: authorId } })
+              const countTotal = await prisma.likePost.count({ where: { postId: id } })
             
               if(!likedVideo){
                   res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
               }
-            res.status(StatusCodes.OK).json({message: 'white'})
+            res.status(StatusCodes.OK).json({message: 'white', total: countTotal})
 
           
         }catch(error){
-
+            return next({
+                status: StatusCodes.BAD_REQUEST,
+                message: "Something's wrong"
+            })
         }
     }
 
