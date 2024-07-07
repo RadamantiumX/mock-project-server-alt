@@ -19,6 +19,17 @@ Content-Type: application/json
   "password": "Seba2010!"
 }
 
+### Adding posts
+
+POST http://localhost:3000/post/new-post
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJyYWRhQGdtYWlsLmNvbSIsImlhdCI6MTcyMDA0MjYzMywiZXhwIjoxNzIwNjQ3NDMzfQ.ahin0oROAKhlH4wGs7GghLG1UN8poGnGWKPIhB19PT0",
+  "content": "Listop la lucha",
+  "videoId": "fRg4aEgJPio"
+}
+
 
 ### Test
 POST http://localhost:4000/social/test
@@ -30,8 +41,8 @@ Content-Type: application/json
 }
 
 
-### Get Posts
-GET http://localhost:4000/post/allresponse
+### Get Posts Responses
+GET http://localhost:3000/post/allresponse/5
 
 
 ### Is Like

@@ -23,7 +23,9 @@ model User {
   post Post[]
   responses ResponsePost[]
   favs Favorite[]
-  likePost LikeVideo[]
+  likeVideo LikeVideo[]
+  likePost LikePost[]
+  likeResponse LikeResponse[]
 }
 
 model Post {
@@ -35,6 +37,7 @@ model Post {
   createdAt DateTime @default(now())
   videoId String
   responses ResponsePost[]
+  like LikePost[]
 }
 
 model ResponsePost {
@@ -49,6 +52,7 @@ model ResponsePost {
   response ResponsePost? @relation("ResponseToResponse",fields: [responseId], references: [id])
   responseId Int?
   responses ResponsePost[] @relation("ResponseToResponse")
+  likes LikeResponse[]
 }
 
 model Favorite {
@@ -63,6 +67,24 @@ model LikeVideo {
   id Int @id @default(autoincrement())
   videoId String
   like Boolean
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  createdAt DateTime @default(now())
+}
+
+model LikePost {
+  id Int @id @default(autoincrement())
+  post Post @relation(fields: [postId], references: [id])
+  postId Int
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  createdAt DateTime @default(now())
+}
+
+model LikeResponse {
+  id Int @id @default(autoincrement())
+  responsePost ResponsePost @relation(fields: [responseId], references: [id])
+  responseId Int
   author User @relation(fields: [authorId], references: [id])
   authorId Int
   createdAt DateTime @default(now())

@@ -5,14 +5,55 @@ import { prisma } from "../prisma-db/prisma";
 import { validatePostSchema } from '../schemas/validations';
 
 export class PostController {
-   async post(req:Request, res:Response, next: NextFunction){
-      const { token, content, videoId, postId, response } = req.body
+  async post(req:Request, res:Response, next: NextFunction){
+    const {token, content, videoId} = req.body
+    try{
+      const decode:any = jwt.verify(token)
+      const email = decode.email
+      const authorId = decode.id
+      const verifyUser = await prisma.user.findUnique({ where:{email} })
+      const validatePost = validatePostSchema(content)
+      if (!verifyUser){
+        
+        return next({
+          status: StatusCodes.UNAUTHORIZED,
+          message: 'Not authorized user'
+        })
+      }
+      if (!validatePost.success) {
+       console.log(validatePost.error.message)
+     }
+     const addPost = await prisma.post.create({
+      data:{
+          content: content,
+          authorId: authorId,
+          videoId: videoId,
+          nickname: verifyUser.nickname
+      }
+  })
+
+
+  res.status(StatusCodes.OK).json({ message: 'Post sent successfully' })
+
+    }catch(error){
+     /* return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: "Something's wrong"
+    })*/
+    console.error('Something was wrong')
+    console.error(error)
+    }
+  }
+
+
+   async postResponse(req:Request, res:Response, next: NextFunction){
+      const { token, content, postId } = req.body
       try{
             const decode:any = jwt.verify(token)
             const email = decode.email
             const authorId = decode.id
             const verifyUser = await prisma.user.findUnique({ where:{email} })
-            const validatePost = validatePostSchema(content)
+           // const validatePost = validatePostSchema(content)
             if (!verifyUser){
               
               return next({
@@ -20,13 +61,10 @@ export class PostController {
                 message: 'Not authorized user'
               })
             }
-            if (!validatePost.success) {
-              return next({
-                status: StatusCodes.BAD_REQUEST,
-                message: JSON.parse(validatePost.error.message)
-              })
-           }
-            if (response){
+           /* if (!validatePost.success) {
+              res.status(StatusCodes.BAD_REQUEST).json(validatePost.error)
+           }*/
+         
               const addResponse = await prisma.responsePost.create({
                 data: {
                     content: content,
@@ -37,19 +75,7 @@ export class PostController {
               })
 
               res.status(StatusCodes.OK).json({ message: 'Response sent successfully' })
-            }
-         
-            const addPost = await prisma.post.create({
-                data:{
-                    content: content,
-                    authorId: authorId,
-                    videoId: videoId,
-                    nickname: verifyUser.nickname
-                }
-            })
-          
-          
-            res.status(StatusCodes.OK).json({ message: 'Post sent successfully' })
+             
       }catch(error){
             return next({
                 status: StatusCodes.BAD_REQUEST,
@@ -94,13 +120,15 @@ export class PostController {
        }
    }
 async allResponses(req:Request, res:Response, next: NextFunction){
+  const id = req.params.id
     try{
-          const responses = await prisma.responsePost.findMany({ orderBy: {createdAt: 'desc'} })
+          const count = await prisma.responsePost.count({ where:{postId: parseInt(id)} })
+          const responses = await prisma.responsePost.findMany({ where:{postId: parseInt(id)},orderBy: {createdAt: 'desc'} })
           if(!responses){
             res.status(StatusCodes.OK).json({ message: "No responses" })
           }
 
-          res.status(StatusCodes.OK).json({ responses })
+          res.status(StatusCodes.OK).json({ count, responses })
     }catch(error:any){
          return next({
           status: StatusCodes.BAD_REQUEST,
@@ -112,6 +140,30 @@ async allResponses(req:Request, res:Response, next: NextFunction){
 async reply(req:Request, res:Response, next: NextFunction){
    //
      
+ }
+
+ async destroyPost(req:Request, res:Response, next: NextFunction){
+       const {id, token, table}= req.body
+       try{
+        const decode:any = jwt.verify(token)
+        const email = decode.email
+        const verifyUser = await prisma.user.findUnique({ where:{email} })   
+        if (!verifyUser){    
+          res.status(StatusCodes.UNAUTHORIZED).json({message:'Not authorized'})
+         }
+        if (table === 'post'){
+          const deletePost = await prisma.post.delete({ where: {id: id} })
+          res.status(StatusCodes.OK).json({ message: 'Post deleted' })
+        } 
+        const deleteResponse = await prisma.responsePost.delete({ where: {id: id} })
+        res.status(StatusCodes.OK).json({message: 'Response deleted'})
+        
+       }catch(error:any){
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: error.message
+         })
+       }
  }
 
 }
