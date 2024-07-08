@@ -108,7 +108,7 @@ export class LikeController {
     }
 
     async likePost(req:Request, res:Response, next: NextFunction){
-         const { token , id, table } = req.body
+         const { token , id, path } = req.body
          try{
             const decode:any = jwt.verify(token)
             const email = decode.email
@@ -117,7 +117,7 @@ export class LikeController {
             if (!verifyUser){
                 res.status(StatusCodes.UNAUTHORIZED).json({message: 'Not authorized'})
             }
-            if(table === 'post'){
+            if(path === 'post'){
                 const likePost = await prisma.likePost.create({
                     data:{
                         postId: id,
@@ -144,7 +144,7 @@ export class LikeController {
     }
 
     async deleteLikePost(req:Request, res:Response, next: NextFunction){
-        const {token, id, table} = req.body
+        const {token, id, path} = req.body
         try{
             const decode:any = jwt.verify(token)
             const email = decode.email
@@ -157,11 +157,12 @@ export class LikeController {
                 message: 'Not authorized user'
               })
             }
-            if(table === 'post'){
-            const deleteCurrent = await prisma.$executeRaw`DELETE FROM likepost WHERE (postId = ${id}) AND (authorId = ${parseInt(authorId)});`
+            if(path === 'post'){
+            const deleteCurrentPost = await prisma.$executeRaw`DELETE FROM likepost WHERE (postId = ${id}) AND (authorId = ${parseInt(authorId)});`
+            res.status(StatusCodes.OK).json({message: 'deleted'})
             }
-
-
+            const deleteCurrentPost = await prisma.$executeRaw`DELETE FROM likeresponse WHERE (responseId = ${id}) AND (authorId = ${parseInt(authorId)});`
+            res.status(StatusCodes.OK).json({message: 'deleted'})
         }catch(error){
             return next({
                 status: StatusCodes.BAD_REQUEST,
@@ -187,6 +188,38 @@ export class LikeController {
 
               const likedVideo = await prisma.likePost.findFirst({ where: { postId: id, authorId: authorId } })
               const countTotal = await prisma.likePost.count({ where: { postId: id } })
+            
+              if(!likedVideo){
+                  res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
+              }
+            res.status(StatusCodes.OK).json({message: 'white', total: countTotal})
+
+          
+        }catch(error){
+            return next({
+                status: StatusCodes.BAD_REQUEST,
+                message: "Something's wrong"
+            })
+        }
+    }
+
+    async currentLikeResponse(req:Request, res:Response, next: NextFunction){
+        const {token, id} = req.body
+        try{
+            const decode:any = jwt.verify(token)
+            const email = decode.email
+            const authorId = decode.id
+            const verifyUser = await prisma.user.findUnique({ where:{email} })
+            if (!verifyUser){
+              
+                return next({
+                  status: StatusCodes.UNAUTHORIZED,
+                  message: 'Not authorized user'
+                })
+              }
+
+              const likedVideo = await prisma.likeResponse.findFirst({ where: { responseId: id, authorId: authorId } })
+              const countTotal = await prisma.likeResponse.count({ where: { responseId: id } })
             
               if(!likedVideo){
                   res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
