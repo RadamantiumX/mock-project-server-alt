@@ -143,7 +143,7 @@ async reply(req:Request, res:Response, next: NextFunction){
  }
 
  async destroyPost(req:Request, res:Response, next: NextFunction){
-       const {id, token, table}= req.body
+       const {id, token, path}= req.body
        try{
         const decode:any = jwt.verify(token)
         const email = decode.email
@@ -151,8 +151,9 @@ async reply(req:Request, res:Response, next: NextFunction){
         if (!verifyUser){    
           res.status(StatusCodes.UNAUTHORIZED).json({message:'Not authorized'})
          }
-        if (table === 'post'){
+        if (path === 'post'){
           const deletePost = await prisma.post.delete({ where: {id: id} })
+
           res.status(StatusCodes.OK).json({ message: 'Post deleted' })
         } 
         const deleteResponse = await prisma.responsePost.delete({ where: {id: id} })
