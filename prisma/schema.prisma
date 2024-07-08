@@ -11,6 +11,7 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+
 }
 
 model User {
@@ -32,7 +33,7 @@ model Post {
   id Int @id @default(autoincrement())
   content String
   nickname String
-  author User @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int 
   createdAt DateTime @default(now())
   videoId String
@@ -44,21 +45,18 @@ model ResponsePost {
   id Int @id @default(autoincrement()) 
   content String
   nickname String
-  author User @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
   createdAt DateTime @default(now())
-  postedBy Post? @relation(fields: [postId], references: [id])
-  postId Int?
-  response ResponsePost? @relation("ResponseToResponse",fields: [responseId], references: [id])
-  responseId Int?
-  responses ResponsePost[] @relation("ResponseToResponse")
+  postedBy Post @relation(fields: [postId], references: [id],onDelete: Cascade)
+  postId Int
   likes LikeResponse[]
 }
 
 model Favorite {
   id Int @id @default(autoincrement())
   videoId String 
-  author User @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
   createdAt DateTime @default(now())
 }
@@ -67,25 +65,25 @@ model LikeVideo {
   id Int @id @default(autoincrement())
   videoId String
   like Boolean
-  author User @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
   createdAt DateTime @default(now())
 }
 
 model LikePost {
   id Int @id @default(autoincrement())
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId Int
-  author User @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
   createdAt DateTime @default(now())
 }
 
 model LikeResponse {
   id Int @id @default(autoincrement())
-  responsePost ResponsePost @relation(fields: [responseId], references: [id])
+  responsePost ResponsePost @relation(fields: [responseId], references: [id], onDelete: Cascade)
   responseId Int
-  author User @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id],onDelete: Cascade)
   authorId Int
   createdAt DateTime @default(now())
 }
