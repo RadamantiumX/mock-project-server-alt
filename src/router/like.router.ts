@@ -11,6 +11,7 @@ import { LikeController } from "../controllers/like.controller"
     likeRouter.post('/add-post',likeController.likePost)
     likeRouter.post('/del-post', likeController.deleteLikePost)
     likeRouter.post('/current-post', likeController.currentLikePost)
+    likeRouter.post('/current-response', likeController.currentLikeResponse)
 
     likeRouter.post('/test', likeController.test)
     
