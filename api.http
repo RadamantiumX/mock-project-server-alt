@@ -1,22 +1,22 @@
 ### Sign Up
-POST http://localhost:4000/auth/signup
+POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-  "nickname": "radaman",
-  "email": "rada@gmail.com",
-  "password": "Seba2010!",
-  "confirmPassword": "Seba2010!"
+  "nickname": "marcos lothers",
+  "email": "marcos@gmail.com",
+  "password": "seba2010",
+  "confirmPassword": "seba2010"
 }
 
 ### Sing In
 
-POST http://localhost:4000/auth/signin
+POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
 {
-  "email": "rada@gmail.com",
-  "password": "Seba2010!"
+  "email": "boster@gmail.com",
+  "password": "Seba2010"
 }
 
 ### Adding posts

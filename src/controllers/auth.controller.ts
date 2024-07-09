@@ -23,19 +23,13 @@ export class AuthController {
              const user = await prisma.user.findUnique({ where: {email} })
 
              if (!user){
-                return next({
-                    status: StatusCodes.NOT_FOUND,
-                    message: 'User not found'
-                })
+                return res.status(StatusCodes.BAD_REQUEST).json({ message: 'The email, or password, provided is wrong.' })
              }
 
              const isValidPassword = await bcrypt.compare(password, user.password)
 
              if (!isValidPassword){
-                return next({
-                    status: StatusCodes.UNAUTHORIZED,
-                    message: 'Invalid password or email provided',
-                  });
+               return res.status(StatusCodes.BAD_REQUEST).json({ message: 'The email, or password, provided is wrong.' })
              }
      
               const token = jwt.sign({ id: user.id, email: user.email });
@@ -64,14 +58,16 @@ export class AuthController {
            const uniqueUser  = await prisma.user.findUnique({ where: { email } })
            const validate = validateUserSchema(req.body)
            if (uniqueUser) {
-              res.status(StatusCodes.BAD_REQUEST).json({ message: "User already exists" })
+            return  res.status(StatusCodes.BAD_REQUEST).json({ message: "User already exists" })
            }
 
-           if (!validate.success) {
-              return next({
-                status: StatusCodes.BAD_REQUEST,
-                message: JSON.parse(validate.error.message)
-              })
+           if (!validate.success)
+            {           
+                return res.status(StatusCodes.BAD_REQUEST).json({message: JSON.parse(validate.error.message)})
+               /* return next({
+                  status: 400,
+                  message: JSON.parse(validate.error.message)
+               })*/
            }
 
            const hashedPassword = bcrypt.hashSync(password, 10)
@@ -89,7 +85,7 @@ export class AuthController {
            }catch(err){
               return next({
                  status: StatusCodes.BAD_REQUEST,
-                 message: 'Something was wrong!'
+                 message: JSON.parse('Something was wrong!')
               })
            }
            

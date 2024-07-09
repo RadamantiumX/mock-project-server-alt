@@ -13,14 +13,12 @@ const userSchema = z.object({
         required_error: 'The nickname is required'
     }).min(5,{
         message: 'The nickname must be larger than 5 characters minimum.'
-    }),
+    }).refine((s)=>!s.includes(' '), 'Incorrect nickname'),
     email: z.string().email({
-        message: 'Please entry a valida email address'
+        message: 'Please entry a valid email address'
     }),
-    password: z.string().min(6).max(30).regex(passwordValidation, {
-        message: 'Your password is not valid'
-    }),
-    confirmPassword: z.string().min(6).max(30)
+    password: z.string().min(6, {message: 'The password must be at 6 characters minimum'}).max(30,{message: 'Is too long password'}), 
+    confirmPassword: z.string().min(6, {message: 'The confimation of password not match...'}).max(30, {message:'The confimation of password not match...'})
    
 }).refine((values) =>{
         return values.password === values.confirmPassword
