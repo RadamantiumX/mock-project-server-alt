@@ -21,7 +21,9 @@ export const createApp = () => {
     app.use(cookieParser())
     
     // app.disable('x-powered-by')
-
+    app.get('/',(req, res)=>{
+        res.status(200).json({message: "Server On!"})
+    })
     app.use('/auth', authRouter)
     app.use('/social', favRouter)
     app.use('/post', postRouter)
