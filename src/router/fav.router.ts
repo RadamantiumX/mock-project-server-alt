@@ -9,6 +9,7 @@ import { FavController } from "../controllers/fav.controller"
     favRouter.post('/fav', favController.fav)
     favRouter.post('/delfav', favController.deleteFav)
     favRouter.post('/isfav', favController.isFav)
+    favRouter.post('/fav-videos', favController.favVideos)
     favRouter.post('/test', favController.isTest)
 
     

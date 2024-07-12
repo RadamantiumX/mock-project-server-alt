@@ -3,8 +3,8 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-  "nickname": "radaman",
-  "email": "rada@gmail.com",
+  "nickname": "booster",
+  "email": "booster@gmail.com",
   "password": "seba2010",
   "confirmPassword": "seba2010"
 }
@@ -91,3 +91,22 @@ X-Omni-Key: f7b57066-11fb-457d-90c5-c5d657adbaaf
 
 ### PHUB API test
 GET http://localhost:4000/phub/models
+
+### Production test
+POST https://mock-project-server-alt.vercel.app/auth/signup
+Content-Type: application/json
+
+{
+  "nickname": "booster",
+  "email": "booster@gmail.com",
+  "password": "seba2010",
+  "confirmPassword": "seba2010"
+}
+
+### Favs Videos
+POST http://localhost:3000/social/fav-videos
+Content-Type: application/json
+
+{
+  "id": 1
+}

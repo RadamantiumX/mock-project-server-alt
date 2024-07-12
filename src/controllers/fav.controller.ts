@@ -90,6 +90,30 @@ export class FavController{
 
     }
 
+    async favVideos(req:Request, res:Response, next: NextFunction){
+      const {token} = req.body
+        try{
+         const decode:any = jwt.verify(token)
+          const email = decode.email
+          const authorId = decode.id
+          const verifyUser = await prisma.user.findUnique({ where:{email} })
+          if (!verifyUser){  
+            return next({
+              status: StatusCodes.UNAUTHORIZED,
+              message: 'Not authorized'
+            })
+          }
+          const results:string[] = []
+          const userVideoFav = await prisma.favorite.findMany({ where: {authorId:authorId} })
+          userVideoFav.map((e)=>{ results.push(e.videoId) })
+          res.status(StatusCodes.OK).json({ results: results })
+        }catch(error:any){
+          return console.error(`Bad Request ${error.message}`)
+        }
+    }
+
+
+
     async isTest(req:Request, res:Response, next: NextFunction){
        const {authorId, videoId } = req.body
       try{
