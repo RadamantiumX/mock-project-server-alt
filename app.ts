@@ -4,6 +4,7 @@ import favRouter from './src/router/fav.router'
 import postRouter from './src/router/post.router'
 import likeRouter from './src/router/like.router'
 import messageRouter from './src/router/message.router'
+import userRouter from './src/router/user.router'
 import testRouter from './src/router/test.router'
 import 'dotenv/config'
 import cors from 'cors'
@@ -30,6 +31,7 @@ export const createApp = () => {
     app.use('/like', likeRouter)
     app.use('/message', messageRouter)
     app.use('/phub', testRouter)
+    app.use('/user', userRouter)
     
 
     const PORT = process.env.PORT || 3000
