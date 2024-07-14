@@ -28,7 +28,7 @@ export class FavController{
           })
            res.status(StatusCodes.OK).json({ message: 'Adding to Favorites'})
           }catch(err){
-            res.status(StatusCodes.FORBIDDEN).json({ message: "Not Authorized" })
+          return  res.status(StatusCodes.FORBIDDEN).json({ message: "Not Authorized" })
             
           }        
  

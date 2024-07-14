@@ -99,12 +99,18 @@ export class AuthController {
              const email = decode.email
              const verifyUser = await prisma.user.findUnique({ where:{email} })
              if (!verifyUser){
-               res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Not valid user' })
+               return next({
+                  status: StatusCodes.UNAUTHORIZED,
+                  message: 'Not Authorized'
+               })
              }
 
          res.status(StatusCodes.OK).json({ message: `Welcome ${verifyUser?.nickname}!` })
       }catch(err){
-         res.status(StatusCodes.UNAUTHORIZED).json({ message: "You must sign in first" })
+         return next({
+            status: StatusCodes.BAD_REQUEST,
+            message: 'Somenthing went wrong!'
+         })
       }       
   
    

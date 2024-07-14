@@ -110,3 +110,11 @@ Content-Type: application/json
 {
   "id": 1
 }
+
+### Delete User
+POST http://localhost:3000/user/user-delete 
+Content-Type: application/json
+
+{
+  "id": 3
+}
