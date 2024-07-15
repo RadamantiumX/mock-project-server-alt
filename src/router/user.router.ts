@@ -6,6 +6,7 @@ const userController = new UserController()
 
 userRouter.post('/user-info', userController.getUserInfo)
 userRouter.post('/user-update',userController.updateUserInfo)
+userRouter.post('/user-password', userController.updatedUserPassword)
 userRouter.post('/user-delete', userController.deleteUser)
 
 export default userRouter
