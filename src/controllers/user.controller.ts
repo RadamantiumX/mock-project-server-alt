@@ -3,8 +3,13 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from "http-status-codes";
 import { prisma } from "../prisma-db/prisma";
 import jwt from "../utils/jwt";
-// import { validateUserSchema } from "../schemas/validations"
 
+import { validateEmail, validateNickname } from '../schemas/validations';
+
+import type { UserUpdateInput } from 'types';
+
+type ValidateEmail = Pick<UserUpdateInput, "email">
+type ValidateNickname = Pick<UserUpdateInput, "nickname">
 export class UserController {
     async getUserInfo (req: Request, res: Response, next:NextFunction){
         
@@ -32,7 +37,21 @@ export class UserController {
 
     async updateUserInfo (req: Request, res: Response, next:NextFunction) {
         try{
-            const {payload, field, token} = req.body
+            const { field, token} = req.body
+            const {payload} = req.body
+            if (field === 'nickname'){
+               const validateUserNickname = validateNickname(payload)
+               if(!validateUserNickname.success){
+                 return res.status(StatusCodes.BAD_REQUEST).json({message: JSON.parse(validateUserNickname.error.message)})
+               } 
+            }else{
+               const validateUserEmail = validateEmail(payload)
+               if(!validateUserEmail.success){
+                 return res.status(StatusCodes.BAD_REQUEST).json({message: JSON.parse(validateUserEmail.error.message)})
+               }
+            }
+            
+            
             const decode:any = jwt.verify(token)
              const email = decode.email
              const verifyUser = await prisma.user.findUnique({ where:{email} })
