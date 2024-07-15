@@ -6,10 +6,6 @@ import jwt from "../utils/jwt";
 
 import { validateEmail, validateNickname } from '../schemas/validations';
 
-import type { UserUpdateInput } from 'types';
-
-type ValidateEmail = Pick<UserUpdateInput, "email">
-type ValidateNickname = Pick<UserUpdateInput, "nickname">
 export class UserController {
     async getUserInfo (req: Request, res: Response, next:NextFunction){
         
