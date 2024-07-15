@@ -5,6 +5,11 @@ export interface AuthInput{
     confirmPassword: string
 }
 
+export interface UserUpdateInput{
+    nickname: string;
+    email: string;
+}
+
 export interface PostInput{
     content: string;
     authorId: number;
