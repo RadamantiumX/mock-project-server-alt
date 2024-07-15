@@ -19,8 +19,8 @@ model User {
   nickname String
   email String @unique
   password String 
-  createdAt DateTime @default(now())
-  updatedAt DateTime? 
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime? @updatedAt @db.Timestamp()
   post Post[]
   responses ResponsePost[]
   favs Favorite[]
