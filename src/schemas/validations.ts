@@ -1,6 +1,8 @@
 import z from 'zod'
-import { AuthInput, PostInput, Message } from 'types'
+import { AuthInput, PostInput, Message, UserUpdateInput } from 'types'
 
+
+type UpdatedUser = Pick<UserUpdateInput,"email" | "nickname">
 // Minimum 8 characters, at least one uppercase letter,
 // one lowercase letter, one number and one special character
 const passwordValidation = new RegExp(
@@ -29,6 +31,30 @@ const userSchema = z.object({
     }
 )
 
+const updateUserSchema = z.object({
+    nickname: z.string({
+        invalid_type_error: 'The nickname must be a valid alphanumeric characters',
+        required_error: 'The nickname is required'
+    }).min(5,{
+        message: 'The nickname must be larger than 5 characters minimum.'
+    }).refine((s)=>!s.includes(' '), 'Incorrect nickname'),
+    email: z.string().email({
+        message: 'Please entry a valid email address'
+    })
+})
+
+
+
+const nickname = z.string({
+    invalid_type_error: 'The nickname must be a valid alphanumeric characters',
+    required_error: 'The nickname is required'
+})
+.min(5,{message: 'Nickname is too short (min. 5 characters)'})
+.max(15, {message: 'Too long nickname (max. 15 characters)'})
+.refine((s)=>!s.includes(' '), 'Incorrect nickname')
+
+const email = z.string().email({message: 'Please entry a valid email address'})
+    
 
 const postSchema = z.object({
     content: z.string({
@@ -57,6 +83,16 @@ export function validatePostSchema(input: PostInput){
 export function validateUserSchema(input: AuthInput){
     return userSchema.safeParse(input)
 }
+
+export function validateNickname(input: UpdatedUser){
+    return nickname.safeParse(input)
+}
+
+export function validateEmail(input: UpdatedUser){
+    return email.safeParse(input)
+}
+
+
 
 export function validateMessageSchema(input: Message){
     return messageSchema.safeParse(input)
