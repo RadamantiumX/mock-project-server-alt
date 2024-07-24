@@ -118,3 +118,6 @@ Content-Type: application/json
 {
   "id": 3
 }
+
+### RedTube API
+GET https://api.redtube.com/?data=redtube.Stars.getStarDetailedList&output=json&page=122
