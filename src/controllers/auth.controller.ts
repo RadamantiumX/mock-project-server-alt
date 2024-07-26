@@ -53,8 +53,9 @@ export class AuthController {
     }
 
     async signup (req: Request, res: Response, next:NextFunction) {
-           const { nickname, email, password, confirmPassword } = req.body
+           
            try{
+           const { nickname, email, password, confirmPassword } = req.body
            const uniqueUser  = await prisma.user.findUnique({ where: { email } })
            const validate = validateUserSchema(req.body)
            if (uniqueUser) {
@@ -85,7 +86,7 @@ export class AuthController {
            }catch(err){
               return next({
                  status: StatusCodes.BAD_REQUEST,
-                 message: JSON.parse('Something was wrong!')
+                 message: 'Something went wrong!'
               })
            }
            
