@@ -5,8 +5,9 @@ import { validateMessageSchema } from '../schemas/validations'
 
 export class MessageController{
     async message(req:Request, res:Response, next: NextFunction){
-        const { name, email, message } = req.body
+        
         try{
+          const { name, email, message } = req.body  
           const validateMessage = validateMessageSchema(req.body)
           if(!validateMessage.success){
             return next({
