@@ -26,7 +26,7 @@ export class FavController{
                 authorId: id,
             }
           })
-           res.status(StatusCodes.OK).json({ message: 'Adding to Favorites'})
+           res.status(StatusCodes.OK).json({ fill: 'red',button:'Favorite',message: 'Adding to favorites'})
           }catch(err){
           return  res.status(StatusCodes.FORBIDDEN).json({ message: "Not Authorized" })
             
@@ -50,7 +50,7 @@ export class FavController{
           }
           const deleteCurrent = await prisma.$executeRaw`DELETE FROM favorite WHERE (videoId = ${videoId}) AND (authorId = ${parseInt(authorId)});`
           
-          res.status(StatusCodes.OK).json({ message: "Delete from Favorites" })
+          res.status(StatusCodes.OK).json({ fill:'none',button:"Add to Favorites",message: "Delete from favorites" })
         }catch(err){
           return next({
             status: StatusCodes.FORBIDDEN,
@@ -76,10 +76,10 @@ export class FavController{
 
         const addFav = await prisma.favorite.findFirst({ where: { videoId: videoId, authorId: authorId } })
         if(!addFav){
-          res.status(StatusCodes.NO_CONTENT).json({ message: 'none' })
+          res.status(StatusCodes.ACCEPTED).json({ fill: 'none', button: 'Add to Favorites' })
         }
 
-        res.status(StatusCodes.OK).json({ message: "red" })
+        res.status(StatusCodes.OK).json({ fill: "red", button: "Favorite" })
         }catch(err){
           return next({
             status: StatusCodes.FORBIDDEN,
