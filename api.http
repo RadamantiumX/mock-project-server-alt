@@ -119,13 +119,10 @@ Content-Type: application/json
   "id": 3
 }
 
-### RedTube API
-GET https://api.redtube.com/?data=redtube.Stars.getStarDetailedList&output=json&page=122
-
 ### Count likes
 POST https://mock-project-server-alt.vercel.app/like/count-likes
 Content-Type: application/json
 
 {
-  "videoId": "3W39hb3eaX1"
+  "videoId":"3W39hb3eaX1"
 }
