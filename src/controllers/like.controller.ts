@@ -119,6 +119,10 @@ export class LikeController {
 
             res.status(StatusCodes.OK).json({ totalCount: totalCount, countLikes: likedVideo })*/
             const total = await prisma.likeVideo.count({ where: {videoId : videoId} })
+            if (!total){
+                res.status(StatusCodes.OK).json({ message: 'Not founded' })
+            }
+
             res.status(StatusCodes.OK).json({ totalLikes: total })
 
         }catch(err){
