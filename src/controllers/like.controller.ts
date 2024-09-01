@@ -109,11 +109,14 @@ export class LikeController {
     async countLikes(req:Request, res:Response, next: NextFunction){
         const { videoId } = req.body
         try{
-            
-           /* const likedVideo = await prisma.likeVideo.count({ where:{videoId: videoId, like:true} })*/
             const totalCount = await prisma.likeVideo.count({ where: videoId})
+            const likedVideo = await prisma.likeVideo.count({ where:{videoId: videoId, like:true} })
 
-            res.status(StatusCodes.OK).json({ totalCount: totalCount })
+            if(!likedVideo){
+                res.status(StatusCodes.OK).json({ totalCount: totalCount, countLikes: 0 })
+            }
+
+            res.status(StatusCodes.OK).json({ totalCount: totalCount, countLikes: likedVideo })
 
         }catch(err){
             return next({
