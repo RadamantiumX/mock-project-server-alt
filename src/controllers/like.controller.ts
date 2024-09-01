@@ -94,10 +94,25 @@ export class LikeController {
             if(!likedVideo){
                 res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
             }
-            const countLikes = await prisma.likeVideo.count({ where:{ videoId: videoId, like: true } })
-            const countTotal = await prisma.likeVideo.count({ where: { videoId: videoId } })
-            res.status(StatusCodes.OK).json({ like: likedVideo?.like, count_likes: countLikes, count_total: countTotal })  
+           
+            res.status(StatusCodes.OK).json({ like: likedVideo?.like })  
             
+
+        }catch(err){
+            return next({
+                status: StatusCodes.BAD_REQUEST,
+                message: "Something's wrong"
+            })
+        }
+    }
+
+    async countLikes(req:Request, res:Response, next: NextFunction){
+        try{
+            const {videoId} = req.body
+            const likedVideo = await prisma.likeVideo.count({ where:{videoId: videoId, like:true} })
+            const totalCount = await prisma.likeVideo.count({ where: videoId})
+
+            res.status(StatusCodes.OK).json({ likesCount: likedVideo, totalCount: totalCount })
 
         }catch(err){
             return next({
