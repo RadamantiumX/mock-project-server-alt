@@ -107,7 +107,7 @@ export class LikeController {
     }
 
     async countLikes(req:Request, res:Response, next: NextFunction){
-        const { videoId } = req.body
+        const videoId = req.body
         try{
             const totalCount = await prisma.likeVideo.count({ where: videoId})
             const likedVideo = await prisma.likeVideo.count({ where:{videoId: videoId, like:true} })
