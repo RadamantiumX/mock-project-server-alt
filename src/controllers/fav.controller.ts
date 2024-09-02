@@ -35,7 +35,7 @@ export class FavController{
     }
 
     async deleteFav(req:Request, res:Response, next: NextFunction){
-        const { videoId, token } = req.body
+        const { token, videoId } = req.body
         try{
           const decode:any = jwt.verify(token)
           const email = decode.email
