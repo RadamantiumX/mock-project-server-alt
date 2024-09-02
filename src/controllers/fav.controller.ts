@@ -39,11 +39,11 @@ export class FavController{
     }
    
     async deleteFav(req:Request, res:Response, next: NextFunction){
-        const { token, videoId, id }= req.body
+        const { token, id }= req.body
         try{
           const decode:any = jwt.verify(token)
           const email = decode.email
-          const authorId = decode.id
+         // const authorId = decode.id
           const verifyUser = await prisma.user.findUnique({ where: {email} })
           if(!verifyUser){
            
