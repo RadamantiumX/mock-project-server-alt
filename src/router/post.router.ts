@@ -7,6 +7,7 @@ import { PostController } from "../controllers/post.controller"
     postRouter.post('/new-post', postController.post)
     postRouter.post('/new-response', postController.postResponse)
     postRouter.get('/allpost/:id/:type', postController.allPosts)
+    postRouter.get('/count-post/:id', postController.countPosts)
     postRouter.get('/allresponse/:id', postController.allResponses)
     postRouter.post('/del', postController.destroyPost)
 

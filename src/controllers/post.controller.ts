@@ -84,7 +84,21 @@ export class PostController {
       }
    }
 
-   
+   async countPosts(req:Request, res:Response, next: NextFunction){
+      const id = req.params.id
+      try{
+        const countPost = await prisma.post.count({ where: { videoId: id } })
+        if(!countPost){
+          res.status(StatusCodes.OK).json({ count: 0 })
+        }
+        res.status(StatusCodes.OK).json({ count: countPost })
+      }catch(error:any){
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: error.message
+      })
+      }
+   }
 
    async allPosts(req:Request, res:Response, next: NextFunction){
        const id  = req.params.id
