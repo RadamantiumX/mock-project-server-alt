@@ -84,7 +84,7 @@ export class FavController{
           res.status(StatusCodes.ACCEPTED).json({ fill: 'none', button: 'Add to Favorites' })
         }
 
-        res.status(StatusCodes.OK).json({ fill: "red", button: "Favorite" })
+        res.status(StatusCodes.OK).json({ fill: "red", button: "Favorite", id: addFav?.id })
         }catch(err){
           return next({
             status: StatusCodes.FORBIDDEN,
