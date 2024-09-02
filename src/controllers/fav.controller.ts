@@ -3,6 +3,10 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "../utils/jwt";
 import { prisma } from "../prisma-db/prisma";
 
+type Body = {
+  token: string,
+  videoId: string
+ }
 export class FavController{
     async fav(req:Request, res:Response, next: NextFunction){
         const { token, videoId } = req.body
@@ -33,9 +37,9 @@ export class FavController{
           }        
  
     }
-
+   
     async deleteFav(req:Request, res:Response, next: NextFunction){
-        const { token, videoId } = req.body
+        const { token, videoId }:Body = req.body
         try{
           const decode:any = jwt.verify(token)
           const email = decode.email
@@ -49,6 +53,7 @@ export class FavController{
             })
           }
           const deleteCurrent = await prisma.$executeRaw`DELETE FROM favorite WHERE (videoId = ${videoId}) AND (authorId = ${parseInt(authorId)});`
+          
           
           res.status(StatusCodes.OK).json({ fill:'none',button:"Add to Favorites",message: "Delete from favorites" })
         }catch(err){
