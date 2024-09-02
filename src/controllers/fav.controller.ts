@@ -30,7 +30,7 @@ export class FavController{
                 authorId: id,
             }
           })
-           res.status(StatusCodes.OK).json({ fill: 'red',button:'Favorite',message: 'Adding to favorites'})
+           res.status(StatusCodes.OK).json({ fill: 'red',button:'Favorite',message: 'Adding to favorites', id: addFav.id})
           }catch(err){
           return  res.status(StatusCodes.FORBIDDEN).json({ message: "Not Authorized" })
             
