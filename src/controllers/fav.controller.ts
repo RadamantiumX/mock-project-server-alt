@@ -39,7 +39,7 @@ export class FavController{
     }
    
     async deleteFav(req:Request, res:Response, next: NextFunction){
-        const { token, videoId }:Body = req.body
+        const { token, videoId, id }= req.body
         try{
           const decode:any = jwt.verify(token)
           const email = decode.email
@@ -52,8 +52,8 @@ export class FavController{
               message: 'Not user authenticated'
             })
           }
-          const deleteCurrent = await prisma.$executeRaw`DELETE FROM favorite WHERE (videoId = ${videoId}) AND (authorId = ${parseInt(authorId)});`
-          
+          //const deleteCurrent = await prisma.$executeRaw`DELETE FROM favorite WHERE (videoId = ${videoId}) AND (authorId = ${parseInt(authorId)});`
+          const delFav = await prisma.favorite.delete({ where:{ id } })
           
           res.status(StatusCodes.OK).json({ fill:'none',button:"Add to Favorites",message: "Delete from favorites" })
         }catch(err){
