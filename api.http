@@ -128,4 +128,4 @@ Content-Type: application/json
 }
 
 ### Count Posts
-GET https://mock-project-server-alt.vercel.app/count-post/1DlInQWebbz
+GET https://mock-project-server-alt.vercel.app/post/count-post/1DlInQWebbz
