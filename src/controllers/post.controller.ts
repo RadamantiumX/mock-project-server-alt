@@ -106,14 +106,14 @@ export class PostController {
 
        try{
         if (type === 'post'){
-         const count = await prisma.post.count({ where: { videoId: id} })
+      
          const posts = await prisma.post.findMany({ where: { videoId: id }, orderBy:{ createdAt: 'desc' }  })
          
          if(!posts){
             res.status(StatusCodes.OK).json({ message: 'No messages for this video' })
          }
          
-         res.status(StatusCodes.OK).json({ count, posts })
+         res.status(StatusCodes.OK).json({ posts })
          } 
          
          if(type === 'reply'){
