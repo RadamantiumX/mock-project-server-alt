@@ -126,3 +126,6 @@ Content-Type: application/json
 {
   "videoId": "3W39hb3eaX1"
 }
+
+### Count Posts
+GET https://mock-project-server-alt.vercel.app/count-post/1DlInQWebbz

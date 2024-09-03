@@ -88,7 +88,7 @@ export class PostController {
       const id = req.params.id
       try{
         const countPost = await prisma.post.count({ where: { videoId: id } })
-        if(!countPost){
+        if(countPost === 0){
           res.status(StatusCodes.OK).json({ count: 0 })
         }
         res.status(StatusCodes.OK).json({ count: countPost })
