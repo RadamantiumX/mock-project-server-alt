@@ -109,7 +109,7 @@ export class PostController {
       
          const posts = await prisma.post.findMany({ where: { videoId: id }, orderBy:{ createdAt: 'desc' }  })
          
-         if(!posts){
+         if(posts.length === 0){
             res.status(StatusCodes.OK).json({ message: 'No messages for this video' })
          }
          
