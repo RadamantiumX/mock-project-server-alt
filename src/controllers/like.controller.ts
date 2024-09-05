@@ -92,7 +92,7 @@ export class LikeController {
             const likedVideo = await prisma.likeVideo.findFirst({ where: { videoId: videoId, authorId: authorId } })
             
             if(!likedVideo){
-                res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
+                res.status(StatusCodes.OK).json({ message: 'none'})
             }
            
             res.status(StatusCodes.OK).json({ like: likedVideo?.like })  
