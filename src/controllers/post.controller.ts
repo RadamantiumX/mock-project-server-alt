@@ -31,9 +31,8 @@ export class PostController {
           nickname: verifyUser.nickname
       }
   })
-  const posts = await prisma.post.findMany({ where: { videoId: videoId }, orderBy:{ createdAt: 'desc' }  })
-
-  res.status(StatusCodes.OK).json({ message: 'Post sent successfully', posts: posts })
+  
+  res.status(StatusCodes.OK).json({ message: 'Post sent successfully' })
 
     }catch(error){
      /* return next({
