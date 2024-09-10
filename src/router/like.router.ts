@@ -8,7 +8,7 @@ import { LikeController } from "../controllers/like.controller"
     likeRouter.post('/add-video', likeController.likeVideo)
     likeRouter.post('/del-video', likeController.deleteLikeVideo)
     likeRouter.post('/current-video', likeController.currentLikeVideo)
-    likeRouter.post('/count-likes', likeController.countLikes)
+    likeRouter.get('/count-likes/:id', likeController.countLikes)
     likeRouter.post('/add-post',likeController.likePost)
     likeRouter.post('/del-post', likeController.deleteLikePost)
     likeRouter.post('/current-post', likeController.currentLikePost)
