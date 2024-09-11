@@ -62,6 +62,9 @@ export class AuthController {
            if (uniqueUserEmail) {
             return  res.status(StatusCodes.BAD_REQUEST).json({ message: "User already exists" })
            }
+           if (uniqueUserNickname){
+             return res.status(StatusCodes.BAD_REQUEST).json({ message: "Nickname already taken" })
+           }
 
            if (!validate.success)
             {           
