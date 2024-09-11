@@ -56,9 +56,10 @@ export class AuthController {
            
            try{
            const { nickname, email, password, confirmPassword } = req.body
-           const uniqueUser  = await prisma.user.findUnique({ where: { email } })
+           const uniqueUserEmail  = await prisma.user.findUnique({ where: { email } })
+           const uniqueUserNickname = await prisma.user.findUnique({ where:{ nickname } })
            const validate = validateUserSchema(req.body)
-           if (uniqueUser) {
+           if (uniqueUserEmail) {
             return  res.status(StatusCodes.BAD_REQUEST).json({ message: "User already exists" })
            }
 
