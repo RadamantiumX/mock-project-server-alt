@@ -35,10 +35,10 @@ export class LikeController {
                 }
             })
             if (like){
-               res.status(StatusCodes.OK).json({ message: 'You liked this video' }) 
+               res.status(StatusCodes.OK).json({ message: 'You liked this video', id: addlike.id }) 
             }
 
-            res.status(StatusCodes.OK).json({ message: 'Disliked this video' }) 
+            res.status(StatusCodes.OK).json({ message: 'Disliked this video', id: addlike.id }) 
 
         }catch(err){
             return next({
@@ -95,7 +95,7 @@ export class LikeController {
                 res.status(StatusCodes.OK).json({ message: 'none'})
             }
            
-            res.status(StatusCodes.OK).json({ like: likedVideo?.like })  
+            res.status(StatusCodes.OK).json({ like: likedVideo?.like, id:likedVideo?.id })  
             
 
         }catch(err){
