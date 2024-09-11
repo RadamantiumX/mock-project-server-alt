@@ -50,7 +50,10 @@ model ResponsePost {
   createdAt DateTime @default(now())
   postedBy Post @relation(fields: [postId], references: [id],onDelete: Cascade)
   postId Int
+  responseBy ResponsePost? @relation("RespondedResponses", fields: [responseId], references: [id])
+  responseId Int?
   likes LikeResponse[]
+  responses ResponsePost[] @relation("RespondedResponses")
 }
 
 model Favorite {
