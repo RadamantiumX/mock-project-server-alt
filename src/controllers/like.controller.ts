@@ -49,11 +49,11 @@ export class LikeController {
     }
 
     async deleteLikeVideo(req:Request, res:Response, next: NextFunction){
-        const { token, videoId } = req.body
+        const { token, id } = req.body
         try{
             const decode:any = jwt.verify(token)
             const email = decode.email
-            const authorId = decode.id
+            // const authorId = decode.id
             const verifyUser = await prisma.user.findUnique({ where:{email} })
             if (!verifyUser){
               
@@ -62,9 +62,9 @@ export class LikeController {
                 message: 'Not authorized user'
               })
             }
-
-            const deleteCurrent = await prisma.$executeRaw`DELETE FROM likevideo WHERE (videoId = ${videoId}) AND (authorId = ${parseInt(authorId)});`
-
+             const deleteCurrent = await prisma.likeVideo.delete({ where: {id} })
+            // const deleteCurrent = await prisma.$executeRaw`DELETE FROM likevideo WHERE (videoId = ${videoId}) AND (authorId = ${parseInt(authorId)});`
+            
             res.status(StatusCodes.OK).json({ message: 'Deleted' })
 
         }catch(err){
