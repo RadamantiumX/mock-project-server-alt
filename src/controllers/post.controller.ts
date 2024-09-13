@@ -101,30 +101,21 @@ export class PostController {
 
    async allPosts(req:Request, res:Response, next: NextFunction){
        const id  = req.params.id
-       const type = req.params.type
+       
 
        try{
-        if (type === 'post'){
-      
+       
+         const count = await prisma.post.count({ where: { videoId: id } })
          const posts = await prisma.post.findMany({ where: { videoId: id }, orderBy:{ createdAt: 'desc' }  })
          
-         if(posts.length === 0){
-            res.status(StatusCodes.OK).json({ message: 'No messages for this video' })
+         if(!posts){
+            res.status(StatusCodes.OK).json({ empty: false })
          }
          
-         res.status(StatusCodes.OK).json({ posts })
-         } 
+         res.status(StatusCodes.OK).json({ count, posts })
          
-         if(type === 'reply'){
-            const count = await prisma.responsePost.count({ where: { postId: parseInt(id) } })
-            const reply = await prisma.responsePost.findMany({ where: { postId: parseInt(id) }, orderBy: { createdAt: 'desc' } })
-
-            if(!reply){
-              res.status(StatusCodes.OK).json({ message: 'Not found responses' })
-            }
-
-            res.status(StatusCodes.OK).json({ count, reply })
-         }
+         
+         
        }catch(error:any){
            return next({
                status: StatusCodes.BAD_REQUEST,
@@ -132,13 +123,13 @@ export class PostController {
            })
        }
    }
-async allResponses(req:Request, res:Response, next: NextFunction){
+async allResponsesPost(req:Request, res:Response, next: NextFunction){
   const id = req.params.id
     try{
           const count = await prisma.responsePost.count({ where:{postId: parseInt(id)} })
           const responses = await prisma.responsePost.findMany({ where:{postId: parseInt(id)},orderBy: {createdAt: 'desc'} })
           if(!responses){
-            res.status(StatusCodes.OK).json({ message: "No responses" })
+            res.status(StatusCodes.OK).json({ empty: false })
           }
 
           res.status(StatusCodes.OK).json({ count, responses })
@@ -150,8 +141,22 @@ async allResponses(req:Request, res:Response, next: NextFunction){
     }
 }
 
-async reply(req:Request, res:Response, next: NextFunction){
-   //
+async allResponsesResponse(req:Request, res:Response, next: NextFunction){
+  const id = req.params.id
+  try{
+        const count = await prisma.responsePost.count({ where:{responseId: parseInt(id)} })
+        const responses = await prisma.responsePost.findMany({ where:{responseId: parseInt(id)},orderBy: {createdAt: 'desc'} })
+        if(!responses){
+          res.status(StatusCodes.OK).json({ empty: false })
+        }
+
+        res.status(StatusCodes.OK).json({ count, responses })
+  }catch(error:any){
+       return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: error.message
+       })
+  }
      
  }
 
