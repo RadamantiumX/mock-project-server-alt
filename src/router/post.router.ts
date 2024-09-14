@@ -6,6 +6,7 @@ import { PostController } from "../controllers/post.controller"
     const postController = new PostController()
     postRouter.post('/new-post', postController.post)
     postRouter.post('/new-response', postController.postResponse)
+    postRouter.post('/new-response-response', postController.responseResponsePost)
     postRouter.get('/allpost/:id', postController.allPosts)
     postRouter.get('/count-post/:id', postController.countPosts)
     postRouter.get('/allresponse/:id', postController.allResponsesPost)

@@ -83,6 +83,40 @@ export class PostController {
       }
    }
 
+  async responseResponsePost (req:Request, res:Response, next: NextFunction){
+    const {token, content, postId, responseId} = req.body
+    try{
+      const decode:any = jwt.verify(token)
+      const email = decode.email
+      const authorId = decode.id
+      const verifyUser = await prisma.user.findUnique({ where:{email} })
+     
+      if (!verifyUser){
+        
+        return next({
+          status: StatusCodes.UNAUTHORIZED,
+          message: 'Not authorized user'
+        })
+      }
+      const addResponseResponse = await prisma.responsePost.create({
+        data: {
+            content: content,
+            authorId: authorId,
+            postId: postId,
+            nickname: verifyUser.nickname,
+            responseId: responseId
+        }
+      })
+      res.status(StatusCodes.OK).json({ message: 'Response sent successfully' })
+      
+    }catch(error){
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: "Something's wrong"
+    })
+    }
+  } 
+
    async countPosts(req:Request, res:Response, next: NextFunction){
       const id = req.params.id
       try{
