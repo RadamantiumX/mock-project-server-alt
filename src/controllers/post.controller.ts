@@ -133,6 +133,38 @@ export class PostController {
       }
    }
 
+   async countPostResponses(req:Request, res:Response, next: NextFunction){
+    const id = req.params.id
+    try{
+      const countResponses = await prisma.responsePost.count({ where: { postId: parseInt(id) } })
+      if(!countResponses){
+        res.status(StatusCodes.OK).json({ count: 0 })
+      }
+      res.status(StatusCodes.OK).json({ count: countResponses })
+    }catch(error:any){
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: error.message
+    })
+    }
+   }
+
+   async countResponseResponses(req:Request, res:Response, next: NextFunction){
+    const id = req.params.id
+    try{
+      const countResponseResponses = await prisma.responsePost.count({ where: { responseId: parseInt(id) } })
+      if(!countResponseResponses){
+        res.status(StatusCodes.OK).json({ count: 0 })
+      }
+      res.status(StatusCodes.OK).json({ count: countResponseResponses })
+    }catch(error:any){
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: error.message
+    })
+    }
+   }
+
    async allPosts(req:Request, res:Response, next: NextFunction){
        const id  = req.params.id
        
