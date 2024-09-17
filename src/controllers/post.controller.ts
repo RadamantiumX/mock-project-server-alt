@@ -84,7 +84,7 @@ export class PostController {
    }
 
   async responseResponsePost (req:Request, res:Response, next: NextFunction){
-    const {token, content, postId, responseId} = req.body
+    const {token, content, responseId} = req.body
     try{
       const decode:any = jwt.verify(token)
       const email = decode.email
@@ -102,7 +102,6 @@ export class PostController {
         data: {
             content: content,
             authorId: authorId,
-            postId: postId,
             nickname: verifyUser.nickname,
             responseId: responseId
         }
