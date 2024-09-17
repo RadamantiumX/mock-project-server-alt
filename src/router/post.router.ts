@@ -12,7 +12,7 @@ import { PostController } from "../controllers/post.controller"
     postRouter.get('/count-response/:id', postController.countPostResponses)
     postRouter.get('/count-response-response/:id', postController.countResponseResponses)
     postRouter.get('/allresponse/:id', postController.allResponsesPost)
-    postRouter.get('/allresponse-responses/:id')
+    postRouter.get('/allresponse-responses/:id', postController.allResponsesResponse)
     postRouter.post('/del', postController.destroyPost)
 
     
