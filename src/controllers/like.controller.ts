@@ -109,23 +109,33 @@ export class LikeController {
     async countLikes(req:Request, res:Response, next: NextFunction){
         
         try{
-            const  videoId  = req.params.id
-           /* const totalCount = await prisma.likeVideo.count({ where: videoId})
-            const likedVideo = await prisma.likeVideo.count({ where:{videoId: videoId, like:true} })
-
-            if(!likedVideo){
-                res.status(StatusCodes.OK).json({ totalCount: totalCount, countLikes: 0 })
-            }
-
-            res.status(StatusCodes.OK).json({ totalCount: totalCount, countLikes: likedVideo })*/
-            const total = await prisma.likeVideo.count({ where: { videoId : videoId } })
-            const totalLikes = await prisma.likeVideo.count({ where: { videoId: videoId, like: true } })
+            const  id = req.params.id
+            const table = req.params.table
+            if(table === 'video'){
+            const total = await prisma.likeVideo.count({ where: { videoId : id } })
+            const totalLikes = await prisma.likeVideo.count({ where: { videoId: id, like: true } })
             if (!total){
                 res.status(StatusCodes.OK).json({ total: 0, totalLikes: 0 })
             }
 
             res.status(StatusCodes.OK).json({ total: total, totalLikes: totalLikes })
-
+            }else if (table === 'post'){
+                const total = await prisma.likePost.count({ where: { postId : parseInt(id)} })
+                const totalLikes = await prisma.likePost.count({ where: { postId: parseInt(id), like:true } })
+                if (!total){
+                    res.status(StatusCodes.OK).json({ total: 0, totalLikes: 0 })
+                }
+    
+                res.status(StatusCodes.OK).json({ total: total, totalLikes: totalLikes })  
+            }else{
+                const total = await prisma.likeResponse.count({ where: { responseId : parseInt(id)} })
+                const totalLikes = await prisma.likeResponse.count({ where: { responseId: parseInt(id), like:true } })
+                if (!total){
+                    res.status(StatusCodes.OK).json({ total: 0, totalLikes: 0 })
+                }
+    
+                res.status(StatusCodes.OK).json({ total: total, totalLikes: totalLikes })  
+            }
         }catch(err){
             return next({
                 status: StatusCodes.BAD_REQUEST,
@@ -135,7 +145,7 @@ export class LikeController {
     }
 
     async likePost(req:Request, res:Response, next: NextFunction){
-         const { token , id, path } = req.body
+         const { token , id, like, path } = req.body
          try{
             const decode:any = jwt.verify(token)
             const email = decode.email
@@ -147,6 +157,7 @@ export class LikeController {
             if(path === 'post'){
                 const likePost = await prisma.likePost.create({
                     data:{
+                        like:like,
                         postId: id,
                         authorId: authorId
                     }
@@ -155,6 +166,7 @@ export class LikeController {
             }
                 const likeResponse = await prisma.likeResponse.create({
                     data: {
+                        like: like,
                         responseId: id,
                         authorId: authorId
                     }

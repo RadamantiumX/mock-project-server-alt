@@ -77,6 +77,7 @@ model LikePost {
   id Int @id @default(autoincrement())
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId Int
+  like Boolean
   author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
   createdAt DateTime @default(now())
@@ -86,6 +87,7 @@ model LikeResponse {
   id Int @id @default(autoincrement())
   responsePost ResponsePost @relation(fields: [responseId], references: [id], onDelete: Cascade)
   responseId Int
+  like Boolean
   author User @relation(fields: [authorId], references: [id],onDelete: Cascade)
   authorId Int
   createdAt DateTime @default(now())
