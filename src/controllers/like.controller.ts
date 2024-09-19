@@ -145,7 +145,7 @@ export class LikeController {
     }
 
     async likePost(req:Request, res:Response, next: NextFunction){
-         const { token , id, like, path } = req.body
+         const { token , id, like, table } = req.body
          try{
             const decode:any = jwt.verify(token)
             const email = decode.email
@@ -154,7 +154,7 @@ export class LikeController {
             if (!verifyUser){
                 res.status(StatusCodes.UNAUTHORIZED).json({message: 'Not authorized'})
             }
-            if(path === 'post'){
+            if(table === 'post'){
                 const likePost = await prisma.likePost.create({
                     data:{
                         like:like,
