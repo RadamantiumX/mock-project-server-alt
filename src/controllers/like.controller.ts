@@ -183,7 +183,7 @@ export class LikeController {
     }
 
     async deleteLikePost(req:Request, res:Response, next: NextFunction){
-        const {token, id, path} = req.body
+        const {token, id, table} = req.body
         try{
             const decode:any = jwt.verify(token)
             const email = decode.email
@@ -195,7 +195,7 @@ export class LikeController {
                 message: 'Not authorized user'
               })
             }
-            if(path === 'post'){
+            if(table === 'post'){
             const deleteCurrentPost = await prisma.likePost.delete({ where: {id} })
             res.status(StatusCodes.OK).json({message: 'deleted'})
             }
