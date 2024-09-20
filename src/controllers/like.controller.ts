@@ -224,13 +224,14 @@ export class LikeController {
                 })
               }
 
-              const likedVideo = await prisma.likePost.findFirst({ where: { postId: parseInt(id), authorId: authorId } })
-              const countTotal = await prisma.likePost.count({ where: { postId: parseInt(id) } })
+              const likedPost = await prisma.likePost.findFirst({ where: { postId: parseInt(id), authorId: authorId } })
             
-              if(!likedVideo){
-                  res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
-              }
-            res.status(StatusCodes.OK).json({message: 'white', total: countTotal})
+            
+              if(!likedPost){
+                res.status(StatusCodes.OK).json({ message: 'none'})
+            }
+           
+            res.status(StatusCodes.OK).json({ like: likedPost?.like, id:likedPost?.id })  
 
           
         }catch(error){
@@ -256,13 +257,14 @@ export class LikeController {
                 })
               }
 
-              const likedVideo = await prisma.likeResponse.findFirst({ where: { responseId: id, authorId: authorId } })
-              const countTotal = await prisma.likeResponse.count({ where: { responseId: id } })
+              const likedResponse = await prisma.likeResponse.findFirst({ where: { responseId: id, authorId: authorId } })
+              
             
-              if(!likedVideo){
-                  res.status(StatusCodes.NOT_MODIFIED).json({ message: 'none'})
-              }
-            res.status(StatusCodes.OK).json({message: 'white', total: countTotal})
+              if(!likedResponse){
+                res.status(StatusCodes.OK).json({ message: 'none'})
+            }
+           
+            res.status(StatusCodes.OK).json({ like: likedResponse?.like, id:likedResponse?.id }) 
 
           
         }catch(error){
