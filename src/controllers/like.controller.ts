@@ -187,7 +187,6 @@ export class LikeController {
         try{
             const decode:any = jwt.verify(token)
             const email = decode.email
-            const authorId = decode.id
             const verifyUser = await prisma.user.findUnique({ where:{email} })
             if (!verifyUser){
               
@@ -197,10 +196,10 @@ export class LikeController {
               })
             }
             if(path === 'post'){
-            const deleteCurrentPost = await prisma.$executeRaw`DELETE FROM likepost WHERE (postId = ${id}) AND (authorId = ${parseInt(authorId)});`
+            const deleteCurrentPost = await prisma.likePost.delete({ where: {id} })
             res.status(StatusCodes.OK).json({message: 'deleted'})
             }
-            const deleteCurrentPost = await prisma.$executeRaw`DELETE FROM likeresponse WHERE (responseId = ${id}) AND (authorId = ${parseInt(authorId)});`
+            const deleteCurrentPost = await prisma.likeResponse.delete({ where: {id} })
             res.status(StatusCodes.OK).json({message: 'deleted'})
         }catch(error){
             return next({
