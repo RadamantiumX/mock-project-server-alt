@@ -108,11 +108,10 @@ export class FavController{
               message: 'Not authorized'
             })
           }
-          const results:any[] = []
-          const timestamp:any[] = []
-          const userVideoFav = await prisma.favorite.findMany({ where: {authorId:authorId} })
-          userVideoFav.map((e)=>{ results.push(e.videoId); timestamp.push(e.createdAt) })
-          res.status(StatusCodes.OK).json({ results: results, timestamp: timestamp })
+          
+          const userVideoFav = await prisma.favorite.findMany({ where: {authorId:authorId}, select: {videoId:true,createdAt:true} })
+          
+          res.status(StatusCodes.OK).json({ results: userVideoFav })
         }catch(error:any){
           return console.error(`Bad Request ${error.message}`)
         }
