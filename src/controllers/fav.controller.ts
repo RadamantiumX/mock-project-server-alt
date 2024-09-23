@@ -43,7 +43,7 @@ export class FavController{
         try{
           const decode:any = jwt.verify(token)
           const email = decode.email
-         // const authorId = decode.id
+          const authorId = decode.id
           const verifyUser = await prisma.user.findUnique({ where: {email} })
           if(!verifyUser){
            
@@ -109,7 +109,7 @@ export class FavController{
             })
           }
           
-          const userVideoFavVideoId = await prisma.favorite.findMany({ where: {authorId:authorId}, select: {videoId:true}, orderBy:{ createdAt: 'desc' } })
+          const userVideoFavVideoId = await prisma.favorite.findMany({ where: {authorId:authorId}, select: {id:true,videoId:true}, orderBy:{ createdAt: 'desc' } })
 
           const userVideoFavCreatedAt = await prisma.favorite.findMany({ where: {authorId:authorId}, select: {createdAt:true}, orderBy:{ createdAt: 'desc' } })
           
