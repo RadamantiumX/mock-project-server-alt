@@ -111,9 +111,9 @@ export class FavController{
           
           const userVideoFavVideoId = await prisma.favorite.findMany({ where: {authorId:authorId}, select: {videoId:true}, orderBy:{ createdAt: 'desc' } })
 
-          const userVideoFavCreatedAt = await prisma.favorite.findMany({ where: {authorId:authorId}, select: {videoId:true}, orderBy:{ createdAt: 'desc' } })
+          const userVideoFavCreatedAt = await prisma.favorite.findMany({ where: {authorId:authorId}, select: {createdAt:true}, orderBy:{ createdAt: 'desc' } })
           
-          res.status(StatusCodes.OK).json({ results: userVideoFavVideoId })
+          res.status(StatusCodes.OK).json({ results: userVideoFavVideoId, createdAt: userVideoFavCreatedAt })
         }catch(error:any){
           return console.error(`Bad Request ${error.message}`)
         }
