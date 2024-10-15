@@ -122,7 +122,21 @@ export class AuthController {
     }
 
     async recovery(req: Request, res: Response, next:NextFunction){
-           
+           try{
+            const {email} = req.body
+            const verifyEmail = await prisma.user.findUnique({where:{email}})
+            if(!verifyEmail){
+               return res.status(StatusCodes.BAD_REQUEST).json({message: "Email provided is not registered"})
+            }
+            
+            res.status(StatusCodes.OK).json({ message: "Success email" })
+
+           }catch(err){
+            return next({
+               status: StatusCodes.BAD_REQUEST,
+               message: 'Somenthing went wrong!'
+            })
+           }
     }
     async reset(req: Request, res: Response, next:NextFunction){
       
