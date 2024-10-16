@@ -132,3 +132,11 @@ GET https://mock-project-server-alt.vercel.app/post/count-post/
 
 ### Latest Posts
 GET https://mock-project-server-alt.vercel.app/post/allpost/X9TU764ngyp/post
+
+### Testing recovery password
+POST https://mock-project-server-alt.vercel.app/auth/recovery
+Content-Type: application/json
+
+{
+  "email": "rada@gmail.com"
+}
