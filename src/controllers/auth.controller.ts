@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { prisma } from "../prisma-db/prisma";
 import jwt from "../utils/jwt";
 import { validateUserSchema } from "../schemas/validations";
+import { main } from '../utils/mail'
 
 
 export class AuthController {
@@ -128,7 +129,7 @@ export class AuthController {
             if(!verifyEmail){
                return res.status(StatusCodes.BAD_REQUEST).json({message: "Email provided is not registered"})
             }
-            
+            main(email)
             res.status(StatusCodes.OK).json({ message: "Success email" })
 
            }catch(err){

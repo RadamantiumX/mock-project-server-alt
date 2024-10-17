@@ -140,3 +140,11 @@ Content-Type: application/json
 {
   "email": "rada@gmail.com"
 }
+
+### Testing recovery password
+POST http://localhost:3000/auth/recovery
+Content-Type: application/json
+
+{
+  "email": "eduardo2502@gmail.com"
+}
