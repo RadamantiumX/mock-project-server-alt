@@ -37,7 +37,7 @@ export class AuthController {
              
               // Cookie options
               const cookieOptions = {
-                    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+                    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),// 7 days
                     httpOnly: true
               }
               res.cookie('jwt', token, cookieOptions) // Cookie Session -> Server side 
@@ -129,8 +129,9 @@ export class AuthController {
             if(!verifyEmail){
                return res.status(StatusCodes.BAD_REQUEST).json({message: "Email provided is not registered"})
             }
-            main(email)
-            res.status(StatusCodes.OK).json({ message: "Success email" })
+            const token = jwt.sign({id:verifyEmail.id, email:verifyEmail.email})
+            main(email, token)
+            res.status(StatusCodes.OK).json({ message: "We sent you a the password reset link to the email provided." })
 
            }catch(err){
             return next({
