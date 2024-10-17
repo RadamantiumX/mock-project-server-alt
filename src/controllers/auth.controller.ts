@@ -130,7 +130,7 @@ export class AuthController {
                return res.status(StatusCodes.BAD_REQUEST).json({message: "Email provided is not registered"})
             }
             const token = jwt.sign({id:verifyEmail.id, email:verifyEmail.email})
-            main(email, token)
+            const sendEmail = await main(email, token)
             res.status(StatusCodes.OK).json({ message: "We sent you a the password reset link to the email provided." })
 
            }catch(err){
