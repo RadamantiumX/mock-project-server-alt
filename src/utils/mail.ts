@@ -18,8 +18,15 @@ export async function main(email:string, token:string) {
             to: email,
             subject: 'Vanilla Leak | Reset your password',
             html: htmlTemplate(token)
+    }, function(err, data) {
+        if(err){
+            console.log("Something went wrong!")
+        }else{
+            console.log('We sent you a the password reset link to the email provided.')
+        }
     })
-
-    console.log("Message sent: "+info.messageId)
+    
+    // console.log("Message sent: "+info.messageId)
+    // console.log("Message failed: "+info.rejected)
 }
 
