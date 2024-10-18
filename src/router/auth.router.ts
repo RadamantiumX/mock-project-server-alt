@@ -11,6 +11,7 @@ import { AuthController } from "../controllers/auth.controller"
     authRouter.post('/logout', authController.logout)
     authRouter.post('/token', authController.isAuthenticated)
     authRouter.post('/recovery', authController.recovery)
+    authRouter.post('/reset', authController.reset)
 
     
 
