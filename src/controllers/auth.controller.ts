@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from "http-status-codes";
 import { prisma } from "../prisma-db/prisma";
 import jwt from "../utils/jwt";
-import { validateUserSchema } from "../schemas/validations";
+import { validateUserSchema, validatePasswordSchema } from "../schemas/validations";
 import { main } from '../utils/mail'
 
 
@@ -141,7 +141,39 @@ export class AuthController {
            }
     }
     async reset(req: Request, res: Response, next:NextFunction){
-      
+      try{
+         const {token, password, confirmPassword} = req.body
+         const validateUserPassword = validatePasswordSchema({password, confirmPassword})
+         if (!validateUserPassword.success){
+             return res.status(StatusCodes.BAD_REQUEST).json({message: JSON.parse(validateUserPassword.error.message)})
+         }
+         const decode:any = jwt.verify(token)
+         const email = decode.email
+         const verifyUser = await prisma.user.findUnique({ where:{email} })
+             if (!verifyUser){
+               return next({
+                  status: StatusCodes.UNAUTHORIZED,
+                  message: 'Not Authorized'
+               })
+             }
+             const hashedPassword = bcrypt.hashSync(password, 10)
+             const updatePassword = await prisma.user.update({
+                where: {
+                    email: email
+                },
+                data:{
+                    password: hashedPassword
+                }
+             })
+
+             res.status(StatusCodes.OK).json({ message: 'Password updated successfully!' })    
+
+      }catch(err){
+         return next({
+            status: StatusCodes.BAD_REQUEST,
+            message: 'Somenthing went wrong!'
+         })
+      }
     }
 
     async logout(req: Request, res: Response, next:NextFunction){
