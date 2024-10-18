@@ -146,5 +146,5 @@ POST http://localhost:3000/auth/recovery
 Content-Type: application/json
 
 {
-  "email": "epsiweb@mail.com"
+  "email": "eduardo2502@gmail.com"
 }
