@@ -5,22 +5,33 @@ import { prisma } from "../prisma-db/prisma";
 import jwt from "../utils/jwt";
 import { validateUserSchema, validatePasswordSchema } from "../schemas/validations";
 import { main } from '../utils/mail'
-
+import { verifyRecaptcha } from '../helpers/verifyRecaptcha'
 
 export class AuthController {
     
        async signin (req: Request, res: Response, next:NextFunction) {
-             const { email, password } = req.body
+             const { email, password, recaptcha } = req.body
 
              try{
-
+                if(!recaptcha){
+                  return next({
+                     status: StatusCodes.BAD_REQUEST,
+                     message: 'No token provided'
+                 })
+                }
                 if (!email || !password) {
                 return next({
                     status: StatusCodes.BAD_REQUEST,
                     message: 'Some required files are missing'
                 })
+               }
+             const verifyResults = await verifyRecaptcha(recaptcha)
+             if (!verifyResults.success){
+               return next({
+                  status: StatusCodes.BAD_REQUEST,
+                  message: 'Some required files are missing'
+              })
              }
-
              const user = await prisma.user.findUnique({ where: {email} })
 
              if (!user){
@@ -177,8 +188,30 @@ export class AuthController {
     }
 
     async logout(req: Request, res: Response, next:NextFunction){
-        res.clearCookie('jwt') // Delete Cookie Session
-        return res.json({ message: 'logout' })
+       try{
+         /*const {reCaptcha} = req.body
+         if(!reCaptcha){
+            return next({
+               status: StatusCodes.BAD_REQUEST,
+               message: 'No token provided'
+           })
+          }
+          const verifyResults = await verifyRecaptcha(reCaptcha)
+             if (!verifyResults.success){
+               return next({
+                  status: StatusCodes.BAD_REQUEST,
+                  message: 'Some required files are missing'
+              })
+             }*/
+          res.clearCookie('jwt') // Delete Cookie Session
+          return res.json({ message: 'logout' })
+       }catch(err){
+         return next({
+            status: StatusCodes.BAD_REQUEST,
+            message: 'Somenthing went wrong!'
+         })
+       }
+        
     }
 }
 
