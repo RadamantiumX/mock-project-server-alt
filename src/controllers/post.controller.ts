@@ -3,11 +3,14 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "../utils/jwt";
 import { prisma } from "../prisma-db/prisma";
 import { validatePostSchema } from '../schemas/validations';
+import { verifyRecaptcha } from '../helpers/verifyRecaptcha';
 
 export class PostController {
   async post(req:Request, res:Response, next: NextFunction){
-    const {token, content, videoId} = req.body
+  
     try{
+      const {token, content, videoId} = req.body
+        
       const decode:any = jwt.verify(token)
       const email = decode.email
       const authorId = decode.id
@@ -46,8 +49,10 @@ export class PostController {
 
 
    async postResponse(req:Request, res:Response, next: NextFunction){
-      const { token, content, postId } = req.body
+      
       try{
+            const { token, content, postId} = req.body
+
             const decode:any = jwt.verify(token)
             const email = decode.email
             const authorId = decode.id
@@ -84,8 +89,10 @@ export class PostController {
    }
 
   async responseResponsePost (req:Request, res:Response, next: NextFunction){
-    const {token, content, responseId} = req.body
+    
     try{
+      const {token, content, responseId} = req.body
+
       const decode:any = jwt.verify(token)
       const email = decode.email
       const authorId = decode.id
