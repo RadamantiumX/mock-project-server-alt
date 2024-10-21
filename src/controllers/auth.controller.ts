@@ -10,28 +10,35 @@ import { verifyRecaptcha } from '../helpers/verifyRecaptcha'
 export class AuthController {
     
        async signin (req: Request, res: Response, next:NextFunction) {
-             const { email, password, recaptcha } = req.body
+             
 
              try{
+               const { email, password, recaptcha } = req.body
+
+               // Recaptcha Verification //
                 if(!recaptcha){
                   return next({
                      status: StatusCodes.BAD_REQUEST,
                      message: 'No token provided'
                  })
                 }
+                const verifyResults = await verifyRecaptcha(recaptcha)
+                 if (!verifyResults.success){
+               return next({
+                  status: StatusCodes.BAD_REQUEST,
+                  message: 'Some required files are missing'
+              })
+             }
+             // Recaptcha Verification //
+
                 if (!email || !password) {
                 return next({
                     status: StatusCodes.BAD_REQUEST,
                     message: 'Some required files are missing'
                 })
                }
-             const verifyResults = await verifyRecaptcha(recaptcha)
-             if (!verifyResults.success){
-               return next({
-                  status: StatusCodes.BAD_REQUEST,
-                  message: 'Some required files are missing'
-              })
-             }
+             
+            
              const user = await prisma.user.findUnique({ where: {email} })
 
              if (!user){
@@ -68,6 +75,8 @@ export class AuthController {
            
            try{
            const { nickname, email, password, confirmPassword,recaptcha } = req.body
+
+           // Recaptcha Verication//
            if(!recaptcha){
             return next({
                status: StatusCodes.BAD_REQUEST,
@@ -81,6 +90,9 @@ export class AuthController {
                   message: 'Some required files are missing'
               })
              }
+           // Recaptcha Verication//  
+
+
            const uniqueUserEmail  = await prisma.user.findUnique({ where: { email } })
            const uniqueUserNickname = await prisma.user.findUnique({ where:{ nickname } })
            const validate = validateUserSchema(req.body)
@@ -148,7 +160,24 @@ export class AuthController {
 
     async recovery(req: Request, res: Response, next:NextFunction){
            try{
-            const {email} = req.body
+            const {email, recaptcha} = req.body
+
+            /// Recaptcha Verification ///
+            if(!recaptcha){
+               return next({
+                  status: StatusCodes.BAD_REQUEST,
+                  message: 'No token provided'
+              })
+             }
+             const verifyResults = await verifyRecaptcha(recaptcha)
+                if (!verifyResults.success){
+                  return next({
+                     status: StatusCodes.BAD_REQUEST,
+                     message: 'Some required files are missing'
+                 })
+                }
+            /// Recaptcha Verification /// 
+
             const verifyEmail = await prisma.user.findUnique({where:{email}})
             if(!verifyEmail){
                return res.status(StatusCodes.BAD_REQUEST).json({message: "Email provided is not registered"})
@@ -166,7 +195,24 @@ export class AuthController {
     }
     async reset(req: Request, res: Response, next:NextFunction){
       try{
-         const {token, password, confirmPassword} = req.body
+         const {token, password, confirmPassword, recaptcha} = req.body
+         
+          // Recaptcha Verification //
+          if(!recaptcha){
+            return next({
+               status: StatusCodes.BAD_REQUEST,
+               message: 'No token provided'
+           })
+          }
+          const verifyResults = await verifyRecaptcha(recaptcha)
+           if (!verifyResults.success){
+         return next({
+            status: StatusCodes.BAD_REQUEST,
+            message: 'Some required files are missing'
+        })
+       }
+       // Recaptcha Verification //
+
          const validateUserPassword = validatePasswordSchema({password, confirmPassword})
          if (!validateUserPassword.success){
              return res.status(StatusCodes.BAD_REQUEST).json({message: JSON.parse(validateUserPassword.error.message)})
@@ -202,20 +248,7 @@ export class AuthController {
 
     async logout(req: Request, res: Response, next:NextFunction){
        try{
-         /*const {reCaptcha} = req.body
-         if(!reCaptcha){
-            return next({
-               status: StatusCodes.BAD_REQUEST,
-               message: 'No token provided'
-           })
-          }
-          const verifyResults = await verifyRecaptcha(reCaptcha)
-             if (!verifyResults.success){
-               return next({
-                  status: StatusCodes.BAD_REQUEST,
-                  message: 'Some required files are missing'
-              })
-             }*/
+        
           res.clearCookie('jwt') // Delete Cookie Session
           return res.json({ message: 'logout' })
        }catch(err){
