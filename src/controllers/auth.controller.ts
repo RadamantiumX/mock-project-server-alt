@@ -67,7 +67,20 @@ export class AuthController {
     async signup (req: Request, res: Response, next:NextFunction) {
            
            try{
-           const { nickname, email, password, confirmPassword } = req.body
+           const { nickname, email, password, confirmPassword,recaptcha } = req.body
+           if(!recaptcha){
+            return next({
+               status: StatusCodes.BAD_REQUEST,
+               message: 'No token provided'
+           })
+          }
+          const verifyResults = await verifyRecaptcha(recaptcha)
+             if (!verifyResults.success){
+               return next({
+                  status: StatusCodes.BAD_REQUEST,
+                  message: 'Some required files are missing'
+              })
+             }
            const uniqueUserEmail  = await prisma.user.findUnique({ where: { email } })
            const uniqueUserNickname = await prisma.user.findUnique({ where:{ nickname } })
            const validate = validateUserSchema(req.body)
